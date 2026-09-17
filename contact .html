@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - te stackly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#d4ff33', // Vibrant lime green
+                        'brand-dark': '#b3d929',
+                        dark: '#1a1a1a',
+                        surface: '#f9f9f9',
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dot-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.05) 2px, transparent 2px);
+            background-size: 24px 24px;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #1a1a1a;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Reveal animation classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Form custom focus */
+        .form-input-wrapper:focus-within {
+            border-color: #d4ff33;
+            box-shadow: 0 0 0 4px rgba(212, 255, 51, 0.2);
+        }
+
+        /* FAQ Accordion */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
+            opacity: 0;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            opacity: 1;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+            color: #d4ff33;
+            background-color: #1a1a1a;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white selection:bg-brand selection:text-dark antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <header class="sticky top-0 bg-white/95 backdrop-blur-md z-40 border-b border-gray-100 shadow-sm transition-all duration-300" id="main-nav">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-2 group" aria-label="te stackly homepage">
+                <div class="bg-dark px-3.5 py-1.5 rounded-2xl flex items-center border border-brand/40 shadow-sm group-hover:border-brand group-hover:shadow-[0_0_15px_rgba(212,255,51,0.25)] transition duration-300">
+                    <img src="images/stackly logo.webp" alt="te stackly" class="h-6 sm:h-7 w-auto object-contain">
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden lg:flex items-center gap-8 font-medium text-gray-700">
+                <a href="index.html" class="nav-link hover:text-dark transition">Home</a>
+                <a href="services.html" class="nav-link hover:text-dark transition">Services</a>
+                <a href="about.html" class="nav-link hover:text-dark transition">About Us</a>
+                <a href="blog.html" class="nav-link hover:text-dark transition">Blog</a>
+                <a href="contact.html" class="nav-link active text-dark">Contact</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="hidden md:flex items-center gap-6">
+                <a href="login.html" class="flex items-center gap-2 font-medium hover:text-brand transition">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+                </a>
+                <a href="signup.html" class="bg-dark text-white px-6 py-3 rounded-full font-medium hover:bg-brand hover:text-dark transition duration-300 shadow-sm">
+                    Open Account
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden text-2xl text-dark p-2" id="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div class="lg:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 hidden shadow-xl z-50" id="mobile-menu">
+            <nav class="flex flex-col p-6 font-medium text-gray-700 space-y-2">
+                <a href="index.html" class="py-3 border-b border-gray-100 hover:text-dark transition">Home</a>
+                <a href="services.html" class="py-3 border-b border-gray-100 hover:text-dark transition">Services</a>
+                <a href="about.html" class="py-3 border-b border-gray-100 hover:text-dark transition">About Us</a>
+                <a href="blog.html" class="py-3 border-b border-gray-100 hover:text-dark transition">Blog</a>
+                <a href="contact.html" class="py-3 border-b border-gray-100 text-dark font-bold">Contact</a>
+                <div class="pt-4 flex flex-col gap-3">
+                    <a href="login.html" class="text-center py-3 border border-gray-200 rounded-xl font-medium hover:border-dark transition">Login</a>
+                    <a href="signup.html" class="text-center py-3 bg-dark text-white rounded-xl font-semibold hover:bg-brand hover:text-dark transition">Open Account</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header (Hero) -->
+    <section class="relative bg-dark text-white pt-20 pb-32 lg:pt-28 lg:pb-36 overflow-hidden border-b border-gray-800">
+        <div class="absolute top-0 right-0 w-full md:w-[50%] h-full bg-brand/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none animate-pulse-slow"></div>
+        <div class="absolute bottom-0 left-0 w-full md:w-[40%] h-full bg-blue-500/10 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+        
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 bg-gray-800 text-brand px-4 py-2 rounded-full text-sm font-medium border border-gray-700 mb-6 shadow-sm animate-fade-in-up">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand animate-ping"></span> 24/7 Support Available
+            </div>
+            <h1 class="text-5xl lg:text-7xl font-bold text-white tracking-tight mb-6 animate-fade-in-up" style="animation-delay: 100ms;">
+                Let's Start a <span class="text-brand">Conversation</span>.
+            </h1>
+            <p class="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style="animation-delay: 200ms;">
+                Whether you have a question about opening an account, need mortgage guidance, or want to explore commercial lending, our Salem-based advisors are here for you.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Info Grid (Bento Boxes) -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-0 -mt-16 relative z-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Email Box -->
+            <div class="bg-white rounded-[2.5rem] p-8 md:p-10 border border-gray-100 shadow-xl hover:shadow-2xl hover:border-brand transition duration-500 transform hover:-translate-y-2 group reveal">
+                <div class="w-14 h-14 bg-surface rounded-2xl flex items-center justify-center text-dark text-2xl mb-6 group-hover:bg-dark group-hover:text-brand transition duration-300 shadow-sm">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-dark mb-3">Chat with Support</h3>
+                <p class="text-gray-600 mb-6 line-clamp-2">Direct email to our Salem helpdesk. Average response time is under 15 minutes.</p>
+                <a href="mailto:support@testackly.com" class="text-lg font-bold text-dark border-b-2 border-brand pb-1 hover:text-brand transition block w-max">
+                    support@testackly.com
+                </a>
+            </div>
+
+            <!-- Phone Box -->
+            <div class="bg-dark rounded-[2.5rem] p-8 md:p-10 border border-gray-800 shadow-xl hover:shadow-[0_20px_50px_rgba(212,255,51,0.15)] hover:border-gray-700 transition duration-500 transform hover:-translate-y-2 group reveal" style="transition-delay: 100ms;">
+                <div class="w-14 h-14 bg-gray-800 rounded-2xl flex items-center justify-center text-brand text-2xl mb-6 group-hover:bg-brand group-hover:text-dark transition duration-300 shadow-sm">
+                    <i class="fa-solid fa-phone-volume"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-3">Call Our Advisors</h3>
+                <p class="text-gray-400 mb-6 line-clamp-2">Mon-Fri 8am to 6pm PST. 24/7 emergency card and fraud line available.</p>
+                <a href="tel:(000)01234567890" class="text-lg font-bold text-white hover:text-brand transition block w-max flex items-center gap-2">
+                    (000) 012 3456 7890 <i class="fa-solid fa-arrow-up-right-from-square transform scale-75 opacity-50"></i>
+                </a>
+            </div>
+
+            <!-- Location Box -->
+            <div class="bg-brand rounded-[2.5rem] p-8 md:p-10 border border-brand-dark shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2 group reveal" style="transition-delay: 200ms;">
+                <div class="w-14 h-14 bg-white/70 rounded-2xl flex items-center justify-center text-dark text-2xl mb-6 group-hover:bg-white transition duration-300 shadow-sm">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-dark mb-3">Visit Salem Branch</h3>
+                <p class="text-dark/90 mb-6 line-clamp-2 font-medium">Walk-ins always welcome. Complimentary coffee and financial consults.</p>
+                <div class="flex flex-col">
+                    <span class="text-lg font-bold text-dark">Stackly Headquarters</span>
+                    <span class="text-dark/80 font-semibold text-sm">Stackly, Salem, Tamil Nadu, India</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Form & Location Section -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-24">
+        <div class="bg-surface border border-gray-200 rounded-[3rem] overflow-hidden flex flex-col lg:flex-row shadow-xl reveal">
+            
+            <!-- Left: Form -->
+            <div class="w-full lg:w-1/2 p-8 md:p-12 lg:p-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-dark mb-3">Send us a message</h2>
+                <p class="text-gray-600 mb-10">Fill out the brief form below and our Salem team will respond promptly.</p>
+                
+                <form action="#" method="POST" class="space-y-6" novalidate onsubmit="event.preventDefault(); (window.stacklyToast || window.showToast)('Thank you! Your message has been received. Our Stackly Salem representative will get in touch shortly.', 'success'); this.reset();">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- First Name -->
+                        <div class="space-y-2">
+                            <label for="firstName" class="block text-sm font-bold text-dark">First Name <span class="text-red-500">*</span></label>
+                            <div class="form-input-wrapper bg-white border border-gray-200 rounded-xl px-4 py-3.5 transition duration-300 flex items-center shadow-sm">
+                                <i class="fa-regular fa-user text-gray-400 mr-3"></i>
+                                <input type="text" id="firstName" name="firstName" placeholder="John" required class="w-full bg-transparent outline-none text-dark font-medium placeholder-gray-400">
+                            </div>
+                        </div>
+                        <!-- Last Name -->
+                        <div class="space-y-2">
+                            <label for="lastName" class="block text-sm font-bold text-dark">Last Name <span class="text-red-500">*</span></label>
+                            <div class="form-input-wrapper bg-white border border-gray-200 rounded-xl px-4 py-3.5 transition duration-300 flex items-center shadow-sm">
+                                <i class="fa-regular fa-user text-gray-400 mr-3"></i>
+                                <input type="text" id="lastName" name="lastName" placeholder="Doe" required class="w-full bg-transparent outline-none text-dark font-medium placeholder-gray-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-bold text-dark">Email Address <span class="text-red-500">*</span></label>
+                        <div class="form-input-wrapper bg-white border border-gray-200 rounded-xl px-4 py-3.5 transition duration-300 flex items-center shadow-sm">
+                            <i class="fa-regular fa-envelope text-gray-400 mr-3"></i>
+                            <input type="email" id="email" name="email" placeholder="john@example.com" required class="w-full bg-transparent outline-none text-dark font-medium placeholder-gray-400">
+                        </div>
+                    </div>
+
+                    <!-- Subject / Inquiry Type -->
+                    <div class="space-y-2">
+                        <label for="subject" class="block text-sm font-bold text-dark">How can we help? <span class="text-red-500">*</span></label>
+                        <div class="form-input-wrapper bg-white border border-gray-200 rounded-xl px-4 py-3.5 transition duration-300 flex items-center pr-4 shadow-sm">
+                            <i class="fa-regular fa-circle-question text-gray-400 mr-3"></i>
+                            <select id="subject" name="subject" required class="w-full bg-transparent outline-none text-dark font-medium appearance-none cursor-pointer">
+                                <option value="" disabled selected class="text-gray-400">Select a topic...</option>
+                                <option value="checking">Open Personal Checking / Savings Account</option>
+                                <option value="business">Commercial & Business Banking</option>
+                                <option value="mortgage">Mortgage & Home Financing</option>
+                                <option value="support">Technical Support & Card Services</option>
+                                <option value="wealth">Wealth Management & Advisory</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down text-gray-400 text-sm ml-auto pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="space-y-2">
+                        <label for="message" class="block text-sm font-bold text-dark">Message <span class="text-red-500">*</span></label>
+                        <div class="form-input-wrapper bg-white border border-gray-200 rounded-xl px-4 py-3.5 transition duration-300 flex items-start shadow-sm">
+                            <i class="fa-regular fa-comment text-gray-400 mr-3 mt-1"></i>
+                            <textarea id="message" name="message" rows="4" placeholder="Tell us more about what you need..." required class="w-full bg-transparent outline-none text-dark font-medium placeholder-gray-400 resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full bg-dark text-white py-4 rounded-xl font-bold hover:bg-brand hover:text-dark transition duration-300 shadow-md flex items-center justify-center gap-2 group">
+                        Send Message <i class="fa-regular fa-paper-plane group-hover:translate-x-1 group-hover:-translate-y-1 transition transform"></i>
+                    </button>
+                    
+                    <p class="text-xs text-gray-500 text-center mt-4">By submitting this form, you agree to our <a href="404.html" class="underline hover:text-dark">Privacy Policy</a>.</p>
+                </form>
+            </div>
+
+            <!-- Right: Interactive Google Map & Location Badge -->
+            <div class="w-full lg:w-1/2 relative min-h-[460px] lg:min-h-full flex flex-col p-4 sm:p-6 bg-gray-100">
+                <div class="relative w-full h-full min-h-[420px] rounded-[2rem] overflow-hidden shadow-inner border border-gray-200 bg-gray-200">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4024.1729600062426!2d78.1739798!3d11.682956599999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3babefef7fd970bb%3A0xe11aef1a71994f9!2sStackly!5e1!3m2!1sen!2sin!4v1789646308368!5m2!1sen!2sin" width="100%" height="100%" style="border:0; min-height: 440px;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" class="w-full h-full object-cover"></iframe>
+                    
+                    <!-- Overlay Card -->
+                    <div class="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md p-5 sm:p-6 rounded-[1.5rem] shadow-2xl border border-white/80 pointer-events-auto">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-brand rounded-2xl flex items-center justify-center text-dark text-xl shrink-0 shadow-md">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <h4 class="text-lg sm:text-xl font-bold text-dark truncate">Stackly Salem HQ</h4>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-brand/20 text-dark text-xs font-bold shrink-0">Open Now</span>
+                                </div>
+                                <p class="text-gray-600 text-xs sm:text-sm font-medium mt-0.5 mb-2">Stackly, Salem, Tamil Nadu, India</p>
+                                <div class="flex flex-wrap items-center gap-3 text-xs font-bold text-dark">
+                                    <span><i class="fa-regular fa-clock text-brand mr-1"></i> Mon-Fri: 8:00 AM - 6:00 PM</span>
+                                    <span><i class="fa-solid fa-square-parking text-brand mr-1"></i> Free Parking</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="max-w-[1000px] mx-auto px-4 md:px-8 pb-24 relative">
+        <div class="text-center mb-12 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-dark mb-4">Frequently Asked Questions</h2>
+            <p class="text-gray-600">Have questions before reaching out? Check our quick answers below.</p>
+        </div>
+
+        <div class="space-y-4 reveal">
+            <!-- FAQ 1 -->
+            <div class="faq-item bg-white border border-gray-200 rounded-[1.5rem] overflow-hidden transition-all duration-300 hover:border-brand cursor-pointer shadow-sm">
+                <div class="faq-header flex justify-between items-center p-6 select-none">
+                    <h4 class="text-lg font-bold text-dark pr-8">How quickly can I open a new account?</h4>
+                    <div class="faq-icon w-8 h-8 rounded-full bg-surface text-gray-500 flex items-center justify-center transition-all duration-300 shrink-0">
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    </div>
+                </div>
+                <div class="faq-answer px-6 pb-0">
+                    <p class="text-gray-600 pb-6 border-t border-gray-100 pt-4">Opening an account with te stackly takes less than 3 minutes online or in our mobile app. Your virtual debit card is activated instantly upon rapid identity verification.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="faq-item bg-white border border-gray-200 rounded-[1.5rem] overflow-hidden transition-all duration-300 hover:border-brand cursor-pointer shadow-sm">
+                <div class="faq-header flex justify-between items-center p-6 select-none">
+                    <h4 class="text-lg font-bold text-dark pr-8">Are my deposits federally insured?</h4>
+                    <div class="faq-icon w-8 h-8 rounded-full bg-surface text-gray-500 flex items-center justify-center transition-all duration-300 shrink-0">
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    </div>
+                </div>
+                <div class="faq-answer px-6 pb-0">
+                    <p class="text-gray-600 pb-6 border-t border-gray-100 pt-4">Yes, 100%. All deposits held with te stackly are FDIC-insured up to the legal maximum of $250,000 per depositor, per account ownership category.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="faq-item bg-white border border-gray-200 rounded-[1.5rem] overflow-hidden transition-all duration-300 hover:border-brand cursor-pointer shadow-sm">
+                <div class="faq-header flex justify-between items-center p-6 select-none">
+                    <h4 class="text-lg font-bold text-dark pr-8">Can I schedule an in-person meeting in Salem?</h4>
+                    <div class="faq-icon w-8 h-8 rounded-full bg-surface text-gray-500 flex items-center justify-center transition-all duration-300 shrink-0">
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
+                    </div>
+                </div>
+                <div class="faq-answer px-6 pb-0">
+                    <p class="text-gray-600 pb-6 border-t border-gray-100 pt-4">Absolutely! You can walk in any weekday between 8:00 AM and 6:00 PM, or submit the contact form above with your preferred date and time to reserve a dedicated advisory session.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Bar Above Footer -->
+    <div class="bg-dark text-white py-6 overflow-hidden border-b border-gray-800">
+        <div class="animate-marquee flex w-max">
+            <div class="flex items-center gap-8 px-4">
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 24/7 Support</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Fast Response</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Secure Messaging</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Local Salem Advisors</span>
+            </div>
+            <div class="flex items-center gap-8 px-4">
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 24/7 Support</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Fast Response</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Secure Messaging</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Local Salem Advisors</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-surface pt-20 pb-10 border-t border-gray-200 mt-0">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8">
+            
+            <div class="flex flex-col lg:flex-row justify-between items-start border-b border-gray-200 pb-12 mb-12 gap-12">
+                <div class="lg:w-1/3">
+                    <a href="index.html" class="inline-flex items-center gap-2 group mb-4" aria-label="te stackly homepage">
+                        <div class="bg-dark px-4 py-2 rounded-2xl flex items-center border border-brand/40 shadow-sm group-hover:border-brand transition duration-300">
+                            <img src="images/stackly logo.webp" alt="te stackly" class="h-7 sm:h-8 w-auto object-contain">
+                        </div>
+                    </a>
+                    <p class="text-gray-500 mb-6 max-w-sm">
+                        Your Journey to Financial Success Starts Here. Located in Salem, committed to serving our community.
+                    </p>
+                </div>
+                
+                <div class="lg:w-1/2 w-full">
+                    <h3 class="text-2xl font-bold text-dark mb-4">Subscribe To Newsletter!</h3>
+                    <form class="flex flex-col sm:flex-row bg-white rounded-2xl sm:rounded-full p-2 border border-gray-200 focus-within:border-brand shadow-sm max-w-lg gap-2 sm:gap-0" novalidate onsubmit="event.preventDefault(); (window.stacklyToast || window.showToast)('Thank you for subscribing to our newsletter!', 'success');">
+                        <input type="email" placeholder="Enter your email to subscribe" required class="w-full px-4 sm:px-6 py-3 bg-transparent outline-none text-gray-700 font-medium min-w-0">
+                        <button type="submit" class="bg-brand text-dark px-8 py-3.5 sm:py-3 rounded-xl sm:rounded-full font-bold hover:bg-dark hover:text-white transition whitespace-nowrap shadow-sm w-full sm:w-auto shrink-0">
+                            Subscribe Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <div>
+                    <h4 class="font-bold text-dark text-lg mb-6">Menu</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="index.html" class="hover:text-brand transition">Home</a></li>
+                        <li><a href="services.html" class="hover:text-brand transition">Services</a></li>
+                        <li><a href="about.html" class="hover:text-brand transition">About Us</a></li>
+                        <li><a href="blog.html" class="hover:text-brand transition">Blog</a></li>
+                        <li><a href="contact.html" class="text-brand font-medium">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-transparent text-lg mb-6 select-none">.</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="services.html" class="hover:text-brand transition">Personal Accounts</a></li>
+                        <li><a href="services.html" class="hover:text-brand transition">Business Loans</a></li>
+                        <li><a href="blog.html" class="hover:text-brand transition">Financial Articles</a></li>
+                        <li><a href="contact.html" class="hover:text-brand transition">Customer Support</a></li>
+                        <li><a href="signup.html" class="hover:text-brand transition">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-dark text-lg mb-6">Quick Links</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="404.html" class="hover:text-brand transition">404 Not Found</a></li>
+                        <li><a href="user-dashboard.html" class="hover:text-brand transition">Client Portal</a></li>
+                        <li><a href="admin-dashboard.html" class="hover:text-brand transition">Admin Console</a></li>
+                        <li><a href="login.html" class="hover:text-brand transition">Secure Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 lg:col-span-1 lg:col-start-5">
+                    <h4 class="font-bold text-dark text-lg mb-6">Follow Us</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-facebook w-5 text-center"></i> Facebook</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-linkedin w-5 text-center"></i> LinkedIn</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-instagram w-5 text-center"></i> Instagram</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-youtube w-5 text-center"></i> YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4">
+                <p>&copy; Copyright - te stackly | Designed for Salem</p>
+                <p class="text-xs text-gray-400">FDIC Insured &bull; 256-bit Bank-Grade Encryption</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileBtn && mobileMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Scroll Reveal Animation Logic
+            const revealElements = document.querySelectorAll('.reveal');
+            if (revealElements.length > 0) {
+                const revealOptions = {
+                    threshold: 0.1,
+                    rootMargin: "0px 0px -50px 0px"
+                };
+
+                const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, revealOptions);
+
+                revealElements.forEach(el => {
+                    revealOnScroll.observe(el);
+                });
+            }
+
+            // FAQ Accordion Logic
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const header = item.querySelector('.faq-header');
+                
+                header.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    
+                    // Close all FAQs first
+                    faqItems.forEach(faq => {
+                        faq.classList.remove('active');
+                        faq.style.borderColor = '';
+                    });
+
+                    // If it wasn't active, open it
+                    if (!isActive) {
+                        item.classList.add('active');
+                        item.style.borderColor = '#d4ff33';
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="validation.js"></script>
+</body>
+</html>

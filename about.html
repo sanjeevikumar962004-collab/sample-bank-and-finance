@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - te stackly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#d4ff33', // Vibrant lime green
+                        'brand-dark': '#b3d929',
+                        dark: '#1a1a1a',
+                        surface: '#f9f9f9',
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dot-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.05) 2px, transparent 2px);
+            background-size: 24px 24px;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #1a1a1a;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Reveal animation classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white selection:bg-brand selection:text-dark antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <header class="sticky top-0 bg-white/95 backdrop-blur-md z-40 border-b border-gray-100 shadow-sm transition-all duration-300" id="main-nav">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-2 group" aria-label="te stackly homepage">
+                <div class="bg-dark px-3.5 py-1.5 rounded-2xl flex items-center border border-brand/40 shadow-sm group-hover:border-brand group-hover:shadow-[0_0_15px_rgba(212,255,51,0.25)] transition duration-300">
+                    <img src="images/stackly logo.webp" alt="te stackly" class="h-6 sm:h-7 w-auto object-contain">
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden lg:flex items-center gap-8 font-medium text-gray-700">
+                <a href="index.html" class="nav-link hover:text-dark transition">Home</a>
+                <a href="services.html" class="nav-link hover:text-dark transition">Services</a>
+                <a href="about.html" class="nav-link active text-dark">About Us</a>
+                <a href="blog.html" class="nav-link hover:text-dark transition">Blog</a>
+                <a href="contact.html" class="nav-link hover:text-dark transition">Contact</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="hidden md:flex items-center gap-6">
+                <a href="login.html" class="flex items-center gap-2 font-medium hover:text-brand transition">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+                </a>
+                <a href="signup.html" class="bg-dark text-white px-6 py-3 rounded-full font-medium hover:bg-brand hover:text-dark transition duration-300 shadow-sm">
+                    Open Account
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden text-2xl text-dark p-2" id="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div class="lg:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 hidden shadow-xl z-50" id="mobile-menu">
+            <nav class="flex flex-col p-6 font-medium text-gray-700 space-y-2">
+                <a href="index.html" class="py-3 border-b border-gray-100 hover:text-dark transition">Home</a>
+                <a href="services.html" class="py-3 border-b border-gray-100 hover:text-dark transition">Services</a>
+                <a href="about.html" class="py-3 border-b border-gray-100 text-dark font-bold">About Us</a>
+                <a href="blog.html" class="py-3 border-b border-gray-100 hover:text-dark transition">Blog</a>
+                <a href="contact.html" class="py-3 hover:text-dark transition">Contact</a>
+                <div class="pt-4 flex flex-col gap-3">
+                    <a href="login.html" class="text-center py-3 border border-gray-200 rounded-xl font-medium hover:border-dark transition">Login</a>
+                    <a href="signup.html" class="text-center py-3 bg-dark text-white rounded-xl font-semibold hover:bg-brand hover:text-dark transition">Open Account</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header (Hero) -->
+    <section class="relative bg-surface py-20 lg:py-28 overflow-hidden border-b border-gray-200">
+        <div class="absolute top-0 right-0 w-[50%] h-full bg-brand/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/3 -z-10"></div>
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full text-sm font-medium border border-gray-200 mb-6 shadow-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand animate-ping"></span> Who We Are
+            </div>
+            <h1 class="text-5xl lg:text-7xl font-bold text-dark tracking-tight mb-6">
+                Empowering Salem's <br> Financial Future.
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                Since our founding, te stackly has been dedicated to providing innovative, secure, and accessible financial services to our community in Salem and across the Pacific Northwest.
+            </p>
+        </div>
+    </section>
+
+    <!-- Our Story / Image Block -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-16 -mt-12 relative z-20">
+        <div class="relative w-full rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl bg-white p-3 sm:p-5 border border-gray-100 group">
+            <div class="w-full h-[400px] md:h-[580px] overflow-hidden rounded-[2rem] sm:rounded-[3rem] relative">
+                <img src="images/pexels-kampus-6248973.webp" alt="Salem Headquarters Building" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent"></div>
+            </div>
+            
+            <!-- Floating Badge -->
+            <div class="absolute bottom-8 left-8 sm:bottom-14 sm:left-14 bg-brand text-dark p-6 sm:p-8 rounded-3xl shadow-2xl transform -rotate-3 hover:rotate-0 transition duration-300 max-w-[220px]">
+                <div class="text-dark mb-2"><i class="fa-solid fa-building-columns text-3xl sm:text-4xl"></i></div>
+                <h3 class="text-4xl sm:text-5xl font-extrabold mb-1">20+</h3>
+                <p class="text-dark/90 text-sm sm:text-base font-bold">Years in Salem, OR</p>
+            </div>
+
+            <!-- Floating Badge 2 -->
+            <div class="absolute top-8 right-8 sm:top-14 sm:right-14 bg-white/95 backdrop-blur-md text-dark p-4 sm:p-6 rounded-3xl shadow-2xl transform rotate-3 hover:rotate-0 transition duration-300 hidden md:flex items-center gap-4 border border-white">
+                <div class="w-12 h-12 bg-green-100 text-green-700 rounded-2xl flex items-center justify-center text-xl font-bold">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-base">#1 Regional Bank</h4>
+                    <p class="text-xs text-gray-500">Salem Business Journal 2026</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact by the Numbers -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 pb-20">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div class="bg-white border border-gray-200 rounded-[2rem] p-8 md:p-10 shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-center items-center text-center group">
+                <h3 class="text-4xl md:text-5xl font-extrabold text-dark mb-2 group-hover:scale-110 transition transform duration-300">$2.4B+</h3>
+                <p class="text-gray-500 font-medium">Assets Managed</p>
+            </div>
+            <div class="bg-brand border border-brand-dark rounded-[2rem] p-8 md:p-10 shadow-md hover:shadow-xl transition duration-300 flex flex-col justify-center items-center text-center group transform lg:-translate-y-4">
+                <h3 class="text-4xl md:text-5xl font-extrabold text-dark mb-2 group-hover:scale-110 transition transform duration-300">120K+</h3>
+                <p class="text-dark/90 font-bold">Active Community Accounts</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-[2rem] p-8 md:p-10 shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-center items-center text-center group">
+                <h3 class="text-4xl md:text-5xl font-extrabold text-dark mb-2 group-hover:scale-110 transition transform duration-300">99.9%</h3>
+                <p class="text-gray-500 font-medium">Uptime Guarantee</p>
+            </div>
+            <div class="bg-dark border border-gray-800 rounded-[2rem] p-8 md:p-10 shadow-md hover:shadow-xl transition duration-300 flex flex-col justify-center items-center text-center group transform lg:translate-y-4">
+                <h3 class="text-4xl md:text-5xl font-extrabold text-brand mb-2 group-hover:scale-110 transition transform duration-300">24/7</h3>
+                <p class="text-gray-400 font-medium">Customer Support</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Split -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Mission Card -->
+            <div class="bg-dark text-white p-10 lg:p-14 rounded-[3rem] flex flex-col justify-center border border-gray-800 shadow-xl">
+                <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center text-brand text-2xl mb-8 border border-gray-700 shadow-sm">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <h2 class="text-3xl lg:text-4xl font-bold mb-6">Our Mission</h2>
+                <p class="text-gray-300 text-lg leading-relaxed">
+                    To deliver personalized, technology-driven banking solutions that empower individuals, families, and businesses in Salem to achieve absolute financial independence and long-term security.
+                </p>
+            </div>
+            
+            <!-- Vision Card -->
+            <div class="bg-brand text-dark p-10 lg:p-14 rounded-[3rem] flex flex-col justify-center border border-brand-dark shadow-xl">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-dark text-2xl mb-8 shadow-sm">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+                <h2 class="text-3xl lg:text-4xl font-bold mb-6">Our Vision</h2>
+                <p class="text-dark/90 text-lg leading-relaxed font-medium">
+                    To be the most trusted and innovative financial institution in Oregon, celebrated for customer satisfaction, radical fee transparency, ethical lending, and grassroots community enrichment.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Divider -->
+    <div class="bg-surface py-6 overflow-hidden relative flex items-center whitespace-nowrap border-y border-gray-200">
+        <div class="animate-marquee flex w-max">
+            <div class="flex items-center gap-12 px-6">
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Integrity</span>
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Innovation</span>
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Community</span>
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Security</span>
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Excellence</span>
+            </div>
+             <div class="flex items-center gap-12 px-6">
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Integrity</span>
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Innovation</span>
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Community</span>
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Security</span>
+                <span class="text-2xl font-bold text-gray-400 flex items-center gap-6"><i class="fa-solid fa-star-of-life text-brand text-xl"></i> Excellence</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Values -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-24">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-dark mb-6">Why Choose te stackly?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto text-lg">We are built on an unbreakable foundation of trust, modern digital tooling, and client-first ethics.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-surface border border-gray-200 rounded-[2.5rem] p-10 hover:border-brand hover:shadow-xl transition duration-300 group">
+                <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-dark mb-6 shadow-sm group-hover:bg-brand transition">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-dark mb-4">Uncompromising Security</h3>
+                <p class="text-gray-600 leading-relaxed">Your financial safety is our highest priority. We employ end-to-end 256-bit AES encryption and automated AI anomaly detection.</p>
+            </div>
+            
+            <div class="bg-surface border border-gray-200 rounded-[2.5rem] p-10 hover:border-brand hover:shadow-xl transition duration-300 group">
+                <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-dark mb-6 shadow-sm group-hover:bg-brand transition">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-dark mb-4">Seamless Technology</h3>
+                <p class="text-gray-600 leading-relaxed">Banking shouldn't be complicated. Our award-winning mobile app delivers instant transfers, shared savings goals, and smart budgeting.</p>
+            </div>
+
+            <div class="bg-surface border border-gray-200 rounded-[2.5rem] p-10 hover:border-brand hover:shadow-xl transition duration-300 group">
+                <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-dark mb-6 shadow-sm group-hover:bg-brand transition">
+                    <i class="fa-solid fa-handshake-angle"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-dark mb-4">Dedicated Salem Support</h3>
+                <p class="text-gray-600 leading-relaxed">We don't leave you stranded with robotic phone trees. Our Salem team is accessible 24/7 with authentic human empathy and advice.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Section -->
+    <section class="relative pt-20 pb-32 bg-dark text-white">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 bg-gray-800 text-brand px-4 py-2 rounded-full text-sm font-medium border border-gray-700 mb-6">
+                        Leadership
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white leading-tight">Meet Our Executive Team.</h2>
+                </div>
+                <a href="contact.html" class="bg-brand text-dark px-8 py-3.5 rounded-full font-bold hover:bg-white transition shadow-md">
+                    Join Our Salem Team
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Team Member 1 -->
+                <div class="group bg-gray-900 rounded-3xl p-4 border border-gray-800 hover:border-brand transition duration-300">
+                    <div class="rounded-2xl overflow-hidden mb-5 relative h-80">
+                        <img src="images/c1.webp" alt="Michael Chen - CEO" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <a href="404.html" class="w-10 h-10 bg-brand text-dark rounded-full flex items-center justify-center hover:bg-white"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="404.html" class="w-10 h-10 bg-brand text-dark rounded-full flex items-center justify-center hover:bg-white"><i class="fa-solid fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold text-white group-hover:text-brand transition">Michael Chen</h4>
+                    <p class="text-gray-400 text-sm">Chief Executive Officer</p>
+                </div>
+
+                <!-- Team Member 2 -->
+                <div class="group bg-gray-900 rounded-3xl p-4 border border-gray-800 hover:border-brand transition duration-300">
+                    <div class="rounded-2xl overflow-hidden mb-5 relative h-80">
+                        <img src="images/c2.webp" alt="Sarah Williams - CFO" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <a href="404.html" class="w-10 h-10 bg-brand text-dark rounded-full flex items-center justify-center hover:bg-white"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="404.html" class="w-10 h-10 bg-brand text-dark rounded-full flex items-center justify-center hover:bg-white"><i class="fa-solid fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold text-white group-hover:text-brand transition">Sarah Williams</h4>
+                    <p class="text-gray-400 text-sm">Chief Financial Officer</p>
+                </div>
+
+                <!-- Team Member 3 -->
+                <div class="group bg-gray-900 rounded-3xl p-4 border border-gray-800 hover:border-brand transition duration-300">
+                    <div class="rounded-2xl overflow-hidden mb-5 relative h-80">
+                        <img src="images/p2.webp" alt="David Rodriguez - CTO" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <a href="404.html" class="w-10 h-10 bg-brand text-dark rounded-full flex items-center justify-center hover:bg-white"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="404.html" class="w-10 h-10 bg-brand text-dark rounded-full flex items-center justify-center hover:bg-white"><i class="fa-solid fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold text-white group-hover:text-brand transition">David Rodriguez</h4>
+                    <p class="text-gray-400 text-sm">Chief Technology Officer</p>
+                </div>
+
+                <!-- Team Member 4 -->
+                <div class="group bg-gray-900 rounded-3xl p-4 border border-gray-800 hover:border-brand transition duration-300">
+                    <div class="rounded-2xl overflow-hidden mb-5 relative h-80">
+                        <img src="images/p1.webp" alt="Emily Stanton - Head of Operations" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <a href="404.html" class="w-10 h-10 bg-brand text-dark rounded-full flex items-center justify-center hover:bg-white"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="404.html" class="w-10 h-10 bg-brand text-dark rounded-full flex items-center justify-center hover:bg-white"><i class="fa-solid fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold text-white group-hover:text-brand transition">Emily Stanton</h4>
+                    <p class="text-gray-400 text-sm">Head of Operations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Life at te stackly (Bento Box Gallery) -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-24 bg-white">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+            <div class="max-w-2xl">
+                <h2 class="text-4xl md:text-5xl font-bold text-dark mb-4">Life at te stackly</h2>
+                <p class="text-gray-600 text-lg">A look inside our Salem headquarters culture: collaborating passionately, building community trust, and celebrating everyday wins.</p>
+            </div>
+            <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition border-b-2 border-dark pb-1 text-lg">
+                View Open Positions <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[280px]">
+            <!-- Large Feature Image -->
+            <div class="md:col-span-2 md:row-span-2 rounded-[2.5rem] overflow-hidden relative group shadow-lg">
+                <img src="images/pexels-arina-krasnikova-6016344.webp" alt="Collaborative Workspace" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent flex items-end p-8">
+                    <div>
+                        <span class="bg-brand text-dark text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">Salem Office</span>
+                        <h3 class="text-white text-2xl font-bold">Collaborative Headquarters Workspace</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Top Right Image -->
+            <div class="md:col-span-2 md:row-span-1 rounded-[2.5rem] overflow-hidden relative group shadow-lg">
+                <img src="images/pexels-mikhail-nilov-6931341.webp" alt="Tech Hackathon" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent flex items-end p-6">
+                    <h3 class="text-white text-xl font-bold">Annual Fintech Hackathons</h3>
+                </div>
+            </div>
+
+            <!-- Bottom Small Image 1 -->
+            <div class="md:col-span-1 md:row-span-1 rounded-[2.5rem] overflow-hidden relative group shadow-lg">
+                <img src="images/pexels-kampus-8441811.webp" alt="Community Volunteering" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent flex items-end p-6">
+                    <h3 class="text-white text-base font-bold">Salem Community Outreach</h3>
+                </div>
+            </div>
+
+            <!-- Bottom Small Image 2 -->
+            <div class="md:col-span-1 md:row-span-1 rounded-[2.5rem] overflow-hidden relative group shadow-lg">
+                <img src="images/pexels-kampus-8171202.webp" alt="Team Outing" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent flex items-end p-6">
+                    <h3 class="text-white text-base font-bold">Team Retreats & Celebrations</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Bar Above Footer -->
+    <div class="bg-dark text-white py-6 overflow-hidden border-b border-gray-800">
+        <div class="animate-marquee flex w-max">
+            <div class="flex items-center gap-8 px-4">
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 24/7 Support</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Fast Response</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Secure Messaging</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Local Salem Advisors</span>
+            </div>
+            <div class="flex items-center gap-8 px-4">
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 24/7 Support</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Fast Response</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Secure Messaging</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Local Salem Advisors</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-surface pt-20 pb-10 border-t border-gray-200 mt-0">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8">
+            
+            <div class="flex flex-col lg:flex-row justify-between items-start border-b border-gray-200 pb-12 mb-12 gap-12">
+                <div class="lg:w-1/3">
+                    <a href="index.html" class="inline-flex items-center gap-2 group mb-4" aria-label="te stackly homepage">
+                        <div class="bg-dark px-4 py-2 rounded-2xl flex items-center border border-brand/40 shadow-sm group-hover:border-brand transition duration-300">
+                            <img src="images/stackly logo.webp" alt="te stackly" class="h-7 sm:h-8 w-auto object-contain">
+                        </div>
+                    </a>
+                    <p class="text-gray-500 mb-6 max-w-sm">
+                        Your Journey to Financial Success Starts Here. Located in Salem, committed to serving our community.
+                    </p>
+                </div>
+                
+                <div class="lg:w-1/2 w-full">
+                    <h3 class="text-2xl font-bold text-dark mb-4">Subscribe To Newsletter!</h3>
+                    <form class="flex flex-col sm:flex-row bg-white rounded-2xl sm:rounded-full p-2 border border-gray-200 focus-within:border-brand shadow-sm max-w-lg gap-2 sm:gap-0" novalidate onsubmit="event.preventDefault(); (window.stacklyToast || window.showToast)('Thank you for subscribing to our newsletter!', 'success');">
+                        <input type="email" placeholder="Enter your email to subscribe" required class="w-full px-4 sm:px-6 py-3 bg-transparent outline-none text-gray-700 font-medium min-w-0">
+                        <button type="submit" class="bg-brand text-dark px-8 py-3.5 sm:py-3 rounded-xl sm:rounded-full font-bold hover:bg-dark hover:text-white transition whitespace-nowrap shadow-sm w-full sm:w-auto shrink-0">
+                            Subscribe Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <div>
+                    <h4 class="font-bold text-dark text-lg mb-6">Menu</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="index.html" class="hover:text-brand transition">Home</a></li>
+                        <li><a href="services.html" class="hover:text-brand transition">Services</a></li>
+                        <li><a href="about.html" class="text-brand font-medium">About Us</a></li>
+                        <li><a href="blog.html" class="hover:text-brand transition">Blog</a></li>
+                        <li><a href="contact.html" class="hover:text-brand transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-transparent text-lg mb-6 select-none">.</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="services.html" class="hover:text-brand transition">Personal Accounts</a></li>
+                        <li><a href="services.html" class="hover:text-brand transition">Business Loans</a></li>
+                        <li><a href="blog.html" class="hover:text-brand transition">Financial Articles</a></li>
+                        <li><a href="contact.html" class="hover:text-brand transition">Customer Support</a></li>
+                        <li><a href="signup.html" class="hover:text-brand transition">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-dark text-lg mb-6">Quick Links</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="404.html" class="hover:text-brand transition">404 Not Found</a></li>
+                        <li><a href="user-dashboard.html" class="hover:text-brand transition">Client Portal</a></li>
+                        <li><a href="admin-dashboard.html" class="hover:text-brand transition">Admin Console</a></li>
+                        <li><a href="login.html" class="hover:text-brand transition">Secure Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 lg:col-span-1 lg:col-start-5">
+                    <h4 class="font-bold text-dark text-lg mb-6">Follow Us</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-facebook w-5 text-center"></i> Facebook</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-linkedin w-5 text-center"></i> LinkedIn</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-instagram w-5 text-center"></i> Instagram</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-youtube w-5 text-center"></i> YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4">
+                <p>&copy; Copyright - te stackly | Designed for Salem</p>
+                <p class="text-xs text-gray-400">FDIC Insured &bull; 256-bit Bank-Grade Encryption</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileBtn && mobileMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Scroll Reveal Animation Logic
+            const revealElements = document.querySelectorAll('.reveal');
+            if (revealElements.length > 0) {
+                const revealOptions = {
+                    threshold: 0.1,
+                    rootMargin: "0px 0px -50px 0px"
+                };
+
+                const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, revealOptions);
+
+                revealElements.forEach(el => {
+                    revealOnScroll.observe(el);
+                });
+            }
+        });
+    </script>
+    <script src="validation.js"></script>
+</body>
+</html>

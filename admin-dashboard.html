@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin &amp; Wealth Console - te stackly Banking</title>
+    <meta name="description" content="Institutional financial administration console, liquidity oversight, KYC compliance, and loan approval portal.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#d4ff33', // Vibrant lime green
+                        'brand-dark': '#b3d929',
+                        dark: '#1a1a1a',
+                        'dark-card': '#222222',
+                        surface: '#f8fafc',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .active-admin-tab {
+            background-color: #d4ff33 !important;
+            color: #1a1a1a !important;
+            font-weight: 700;
+        }
+        .active-admin-tab i {
+            color: #1a1a1a !important;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+        /* Sidebar transitions */
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-surface selection:bg-brand selection:text-dark antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Mobile / Tablet Drawer Backdrop Overlay -->
+    <div id="adminSidebarBackdrop" onclick="toggleAdminMobileSidebar(false)" class="fixed inset-0 bg-dark/70 backdrop-blur-sm z-40 hidden transition-opacity duration-300 opacity-0 lg:hidden" aria-hidden="true"></div>
+
+    <!-- ADMIN SIDEBAR: Responsive Left Navigation (Fixed Desktop Slidebar & Slide-over Mobile/Tablet Drawer) -->
+    <aside id="adminDashboardSidebar" class="sidebar-transition fixed top-0 bottom-0 left-0 z-50 w-72 lg:w-64 xl:w-72 bg-dark text-white flex flex-col justify-between border-r border-gray-800 shadow-2xl -translate-x-full lg:translate-x-0">
+        
+        <!-- Sidebar Top Area: Admin Logo & Close Button (Mobile) -->
+        <div>
+            <div class="p-5 sm:p-6 border-b border-gray-800/80 flex items-center justify-between">
+                <a href="javascript:void(0)" onclick="switchAdminTab('overview')" class="flex items-center gap-3 group" title="Console Overview">
+                    <div class="bg-white/5 px-3 py-1.5 rounded-xl border border-brand/30 flex items-center group-hover:border-brand transition">
+                        <img src="images/stackly logo.webp" alt="te stackly" class="h-6 w-auto object-contain">
+                    </div>
+                </a>
+
+                <!-- Mobile Close Toggle Button -->
+                <button onclick="toggleAdminMobileSidebar(false)" class="lg:hidden text-gray-400 hover:text-white p-2 rounded-xl hover:bg-white/10 transition" aria-label="Close admin menu">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Quick Action Audit Log Export in Sidebar -->
+            <div class="px-4 pt-4 pb-2">
+                <button onclick="stacklyToast('Full liquidity audit report generated (PDF).', 'success'); toggleAdminMobileSidebar(false);" class="w-full bg-brand text-dark hover:bg-brand-dark py-3 px-4 rounded-2xl font-bold text-sm transition flex items-center justify-center gap-2.5 shadow-lg shadow-brand/10">
+                    <i class="fa-solid fa-file-arrow-down text-xs"></i>
+                    <span class="sidebar-text">Export Audit Log</span>
+                </button>
+            </div>
+
+            <!-- Navigation Links / Admin Tabs List -->
+            <nav class="p-3 space-y-1.5" aria-label="Admin Navigation Tabs">
+                <div class="px-3 pt-2 pb-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider sidebar-text">
+                    Control Center
+                </div>
+
+                <button onclick="switchAdminTab('overview')" id="adm-btn-overview" class="adm-tab-btn active-admin-tab w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-gauge-high text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text">Liquidity &amp; Metrics</span>
+                </button>
+
+                <button onclick="switchAdminTab('kyc')" id="adm-btn-kyc" class="adm-tab-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-id-card text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text flex-1">KYC &amp; Accounts</span>
+                    <span class="sidebar-text px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-brand">28</span>
+                </button>
+
+                <button onclick="switchAdminTab('loans')" id="adm-btn-loans" class="adm-tab-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-hand-holding-dollar text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text flex-1">Loan Queue</span>
+                    <span class="sidebar-text px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300">14</span>
+                </button>
+
+                <button onclick="switchAdminTab('audit')" id="adm-btn-audit" class="adm-tab-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-triangle-exclamation text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text">Risk &amp; Security</span>
+                </button>
+
+                <button onclick="switchAdminTab('settings')" id="adm-btn-settings" class="adm-tab-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-gears text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text">Console Settings</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Sidebar Bottom Area: Admin Profile Card & Sign Out -->
+        <div class="p-4 border-t border-gray-800/80 bg-black/20">
+            <div class="flex items-center justify-between p-2 rounded-2xl bg-white/5 border border-white/10">
+                <div class="flex items-center gap-3 min-w-0">
+                    <img src="images/c1.webp" alt="Super Admin" class="w-10 h-10 rounded-full object-cover border-2 border-brand shadow-md flex-shrink-0">
+                    <div class="min-w-0 sidebar-text">
+                        <div class="text-sm font-bold text-white truncate">Super Admin</div>
+                        <div class="text-[11px] text-gray-400 truncate flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse"></span>
+                            <span>Compliance &amp; Liquidity</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="login.html" onclick="localStorage.removeItem('stackly_user')" class="text-gray-400 hover:text-red-400 transition p-2 rounded-xl hover:bg-white/10 flex-shrink-0" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN APP SHELL: Responsive wrapper adjusting with desktop sidebar -->
+    <div id="adminMainContentWrapper" class="flex-1 lg:pl-64 xl:pl-72 flex flex-col min-h-screen transition-all duration-300">
+        
+        <!-- Sticky Top Bar for Mobile, Tablet & Desktop Controls -->
+        <header class="bg-white/95 backdrop-blur-md border-b border-gray-200 sticky top-0 z-30">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+                
+                <!-- Left: Mobile Menu Toggle Button & Desktop Slidebar Collapse Button -->
+                <div class="flex items-center gap-3">
+                    <!-- Mobile Hamburger Button -->
+                    <button onclick="toggleAdminMobileSidebar(true)" class="lg:hidden p-2.5 rounded-2xl bg-surface border border-gray-200 text-dark hover:bg-gray-100 hover:border-dark transition duration-200 focus:outline-none focus:ring-2 focus:ring-brand" aria-label="Open admin navigation drawer">
+                        <i class="fa-solid fa-bars-staggered text-lg"></i>
+                    </button>
+
+                    <!-- Desktop Sidebar Collapse Toggle Button -->
+                    <button id="adminDesktopSidebarToggle" onclick="toggleAdminDesktopSidebarCollapse()" class="hidden lg:flex items-center gap-2 p-2.5 rounded-2xl bg-surface border border-gray-200 text-gray-600 hover:text-dark hover:border-dark transition duration-200" title="Collapse / Expand Sidebar">
+                        <i id="adminDesktopSidebarToggleIcon" class="fa-solid fa-bars text-sm"></i>
+                    </button>
+
+                    <!-- System Health Status Pill -->
+                    <div class="flex items-center gap-2 text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                        <span class="hidden sm:inline">Bank Core:</span> 99.99% Online
+                    </div>
+                </div>
+
+                <!-- Right: Quick Header Tools & Admin Profile Pill -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <!-- Search Audit Bar (Simulated) -->
+                    <div class="relative hidden md:block">
+                        <i onclick="stacklyToast('Audit search filter ready', 'info')" class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs cursor-pointer hover:text-dark"></i>
+                        <input type="text" onkeydown="if(event.key==='Enter') stacklyToast('Audit filter applied: ' + this.value, 'info')" placeholder="Search account, TX ID, loan..." class="pl-9 pr-4 py-2 bg-surface border border-gray-200 rounded-xl text-xs text-dark placeholder-gray-400 focus:outline-none focus:border-dark w-48 lg:w-64 transition">
+                    </div>
+
+                    <!-- Export Log Button (Desktop Shortcut) -->
+                    <button onclick="stacklyToast('Full liquidity audit report generated (PDF).', 'success')" class="hidden sm:flex px-4 py-2 bg-dark text-white rounded-xl text-xs font-bold hover:bg-brand hover:text-dark transition items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-file-arrow-down text-xs"></i> Audit Log
+                    </button>
+
+                    <!-- Admin Profile Pill -->
+                    <div class="flex items-center gap-3 pl-2 sm:pl-4 border-l border-gray-200">
+                        <img src="images/c1.webp" alt="Super Admin" class="w-9 h-9 rounded-full object-cover border border-brand shadow-sm flex-shrink-0">
+                        <div class="hidden sm:block text-left">
+                            <div class="text-xs font-bold text-dark leading-tight">Admin Console</div>
+                            <div class="text-[10px] text-gray-400 font-medium">Compliance Node #1</div>
+                        </div>
+                        <a href="login.html" onclick="localStorage.removeItem('stackly_user')" class="text-gray-400 hover:text-red-500 transition p-1.5 rounded-lg hover:bg-gray-100" title="Sign Out">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard View Container -->
+        <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            
+            <!-- Top Stats Banner -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm">
+                <div class="space-y-1">
+                    <div class="inline-flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                        <i class="fa-solid fa-shield-halved text-brand-dark"></i> Institutional Operations Management
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-black text-dark">
+                        Financial Oversight &amp; Audit Console
+                    </h1>
+                    <p class="text-gray-500 text-sm">Real-time risk monitoring, KYC clearance, and institutional capital liquidity.</p>
+                </div>
+
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full md:w-auto">
+                    <button onclick="stacklyToast('Full liquidity audit report generated (PDF).', 'success')" class="flex-1 sm:flex-none px-6 py-3 bg-dark text-white rounded-2xl text-xs font-bold hover:bg-brand hover:text-dark transition flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-file-arrow-down"></i> Export Audit Log
+                    </button>
+                    <button onclick="stacklyToast('Ledger nodes synchronized successfully.', 'info')" class="flex-1 sm:flex-none px-6 py-3 bg-white border border-gray-200 text-dark rounded-2xl text-xs font-bold hover:border-dark hover:bg-gray-50 transition flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-rotate"></i> Sync Nodes
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile & Tablet Secondary Tab Bar -->
+            <div class="lg:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
+                <button onclick="switchAdminTab('overview')" id="mobile-adm-overview" class="mobile-adm-tab-btn active-admin-tab px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 bg-dark text-brand">
+                    <i class="fa-solid fa-gauge-high"></i> Liquidity &amp; Metrics
+                </button>
+                <button onclick="switchAdminTab('kyc')" id="mobile-adm-kyc" class="mobile-adm-tab-btn px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 text-gray-600 bg-white border border-gray-200 hover:bg-surface">
+                    <i class="fa-solid fa-id-card"></i> KYC (28)
+                </button>
+                <button onclick="switchAdminTab('loans')" id="mobile-adm-loans" class="mobile-adm-tab-btn px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 text-gray-600 bg-white border border-gray-200 hover:bg-surface">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Loans (14)
+                </button>
+                <button onclick="switchAdminTab('audit')" id="mobile-adm-audit" class="mobile-adm-tab-btn px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 text-gray-600 bg-white border border-gray-200 hover:bg-surface">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Risk &amp; Security
+                </button>
+                <button onclick="switchAdminTab('settings')" id="mobile-adm-settings" class="mobile-adm-tab-btn px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 text-gray-600 bg-white border border-gray-200 hover:bg-surface">
+                    <i class="fa-solid fa-gears"></i> Console Settings
+                </button>
+            </div>
+
+            <!-- TAB 1: OVERVIEW & LIQUIDITY -->
+            <div id="adm-overview" class="adm-content space-y-8">
+                <!-- 4 Big Financial KPI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
+                    <!-- Total AUM -->
+                    <div class="bg-dark text-white p-6 rounded-3xl relative overflow-hidden shadow-lg border border-gray-800">
+                        <div class="absolute -right-8 -top-8 w-32 h-32 bg-brand/20 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="text-xs font-bold text-gray-400 uppercase mb-3">Total Assets Under Management</div>
+                        <div class="text-3xl font-black text-white mb-2">$42,850,000</div>
+                        <div class="text-xs text-brand font-semibold flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-trend-up"></i> +22.4% YoY Growth
+                        </div>
+                    </div>
+
+                    <!-- Daily Settlement -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <div class="text-xs font-bold text-gray-400 uppercase mb-3">24H Wire Volume</div>
+                        <div class="text-2xl font-black text-dark mb-2">$1,452,800</div>
+                        <div class="text-xs text-gray-500">1,892 transactions processed today</div>
+                    </div>
+
+                    <!-- Active Banking Clients -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <div class="text-xs font-bold text-gray-400 uppercase mb-3">Verified Active Clients</div>
+                        <div class="text-2xl font-black text-dark mb-2">14,280</div>
+                        <div class="text-xs text-green-600 font-semibold">+184 new accounts this week</div>
+                    </div>
+
+                    <!-- Pending Approvals -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <div class="text-xs font-bold text-gray-400 uppercase mb-3">Pending KYC Clearance</div>
+                        <div class="text-2xl font-black text-amber-500 mb-2">28 Pending</div>
+                        <div class="text-xs text-gray-500">Avg resolution time: 14 mins</div>
+                    </div>
+                </div>
+
+                <!-- Live Transaction Feed -->
+                <div class="bg-white p-5 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-dark">Live Banking Ledger &amp; Wire Stream</h2>
+                            <p class="text-xs text-gray-400">Institutional routing and domestic clearance feed.</p>
+                        </div>
+                        <button onclick="stacklyToast('Ledger refreshed with latest node blocks.', 'info')" class="text-xs font-bold text-dark hover:text-brand-dark flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface border border-gray-200">
+                            <i class="fa-solid fa-rotate"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto -mx-5 sm:mx-0 px-5 sm:px-0">
+                        <table class="w-full text-left text-xs min-w-[640px]">
+                            <thead>
+                                <tr class="border-b border-gray-100 text-gray-400 uppercase tracking-wider font-bold">
+                                    <th class="pb-3 pr-4">Reference ID</th>
+                                    <th class="pb-3 pr-4">Sender / Recipient</th>
+                                    <th class="pb-3 pr-4">Routing Gateway</th>
+                                    <th class="pb-3 pr-4">Amount</th>
+                                    <th class="pb-3 pr-4">Risk Assessment</th>
+                                    <th class="pb-3">Status / Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-gray-50/50 transition">
+                                    <td class="py-4 pr-4 font-mono font-bold text-dark">TX-89210-US</td>
+                                    <td class="py-4 pr-4 font-semibold text-dark">Apex Capital Holdings &rarr; Morgan Corp</td>
+                                    <td class="py-4 pr-4 text-gray-500">Fedwire Real-Time</td>
+                                    <td class="py-4 pr-4 font-bold text-dark">$185,000.00</td>
+                                    <td class="py-4 pr-4"><span class="px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-bold text-[10px]">Low (0.01)</span></td>
+                                    <td class="py-4"><span class="px-2.5 py-1 rounded-full bg-green-100 text-green-800 font-bold text-[10px]">Settled</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50/50 transition">
+                                    <td class="py-4 pr-4 font-mono font-bold text-dark">TX-89211-EU</td>
+                                    <td class="py-4 pr-4 font-semibold text-dark">Geneva Private Wealth &rarr; te stackly Vault</td>
+                                    <td class="py-4 pr-4 text-gray-500">SWIFT BIC Clearance</td>
+                                    <td class="py-4 pr-4 font-bold text-dark">&euro;420,000.00</td>
+                                    <td class="py-4 pr-4"><span class="px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-bold text-[10px]">Low (0.02)</span></td>
+                                    <td class="py-4"><span class="px-2.5 py-1 rounded-full bg-green-100 text-green-800 font-bold text-[10px]">Settled</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50/50 transition">
+                                    <td class="py-4 pr-4 font-mono font-bold text-dark">TX-89212-FL</td>
+                                    <td class="py-4 pr-4 font-semibold text-dark">Unverified Account &rarr; Offshore Node</td>
+                                    <td class="py-4 pr-4 text-gray-500">Automated Clearing House</td>
+                                    <td class="py-4 pr-4 font-bold text-dark">$49,990.00</td>
+                                    <td class="py-4 pr-4"><span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-bold text-[10px]">Review Flagged</span></td>
+                                    <td class="py-4"><button onclick="stacklyToast('Transaction frozen for AML review', 'error')" class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px] hover:bg-amber-200 transition">Freeze Transfer</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: KYC & CLIENT ACCOUNTS -->
+            <div id="adm-kyc" class="adm-content hidden space-y-6">
+                <div class="bg-white p-5 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-lg font-bold text-dark">Pending KYC &amp; Verification Queue</h2>
+                            <p class="text-xs text-gray-400">Review identity documents against global compliance registries.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+                        <!-- KYC Item 1 -->
+                        <div class="p-5 rounded-2xl bg-surface border border-gray-100 space-y-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
+                                <div>
+                                    <h4 class="font-bold text-dark text-sm">Elena Rostova</h4>
+                                    <p class="text-xs text-gray-400">elena.rostova@premier.com &bull; Tier: Wealth Management</p>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-bold text-[10px]">Passport Verified</span>
+                            </div>
+                            <div class="text-xs text-gray-600 bg-white p-3.5 rounded-xl border border-gray-100 space-y-1">
+                                <div><strong>Government ID:</strong> Pass-9842104 (Germany)</div>
+                                <div><strong>Source of Funds:</strong> Real Estate Portfolio Sale</div>
+                                <div><strong>Initial Deposit:</strong> $150,000.00</div>
+                            </div>
+                            <div class="flex flex-wrap sm:flex-nowrap gap-2">
+                                <button onclick="stacklyToast('Account for Elena Rostova APPROVED!', 'success'); this.closest('.p-5').remove();" class="flex-1 py-2.5 bg-dark text-white rounded-xl text-xs font-bold hover:bg-brand hover:text-dark transition">Approve Account</button>
+                                <button onclick="stacklyToast('Additional documentation requested.', 'info')" class="px-4 py-2.5 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 hover:border-dark transition">Request Info</button>
+                            </div>
+                        </div>
+
+                        <!-- KYC Item 2 -->
+                        <div class="p-5 rounded-2xl bg-surface border border-gray-100 space-y-4">
+                            <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
+                                <div>
+                                    <h4 class="font-bold text-dark text-sm">Beacon Capital LLC</h4>
+                                    <p class="text-xs text-gray-400">contact@beaconcap.io &bull; Tier: Corporate Commercial</p>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-bold text-[10px]">Articles of Inc.</span>
+                            </div>
+                            <div class="text-xs text-gray-600 bg-white p-3.5 rounded-xl border border-gray-100 space-y-1">
+                                <div><strong>EIN Number:</strong> 12-8492019 (Delaware)</div>
+                                <div><strong>Authorized Signer:</strong> David Sterling (CEO)</div>
+                                <div><strong>Projected Vol:</strong> $2,000,000 / mo</div>
+                            </div>
+                            <div class="flex flex-wrap sm:flex-nowrap gap-2">
+                                <button onclick="stacklyToast('Corporate Account for Beacon Capital APPROVED!', 'success'); this.closest('.p-5').remove();" class="flex-1 py-2.5 bg-dark text-white rounded-xl text-xs font-bold hover:bg-brand hover:text-dark transition">Approve Account</button>
+                                <button onclick="stacklyToast('Additional corporate documentation requested.', 'info')" class="px-4 py-2.5 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 hover:border-dark transition">Request Info</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: LOAN QUEUE -->
+            <div id="adm-loans" class="adm-content hidden space-y-6">
+                <div class="bg-white p-5 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-dark">Commercial &amp; Personal Loan Applications</h2>
+                        <p class="text-xs text-gray-400">Underwriting queue with automated credit risk scores.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-surface border border-gray-100 gap-4">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-bold text-dark text-sm">Vanguard Logistics Corp</h4>
+                                    <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Credit Score: 790</span>
+                                </div>
+                                <p class="text-xs text-gray-500">Business Expansion Term Loan &bull; 5 Year Fixed 5.2% APR</p>
+                            </div>
+                            <div class="text-left sm:text-right">
+                                <div class="text-lg font-black text-dark">$500,000.00</div>
+                                <div class="text-xs text-gray-400">Collateral Verified (Fleet Assets)</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="stacklyToast('Loan of $500,000 Approved and funded!', 'success'); this.closest('.p-5').remove();" class="px-4 py-2.5 bg-dark text-white hover:bg-brand hover:text-dark rounded-xl text-xs font-bold transition">Accept &amp; Fund</button>
+                                <button onclick="stacklyToast('Loan rejected.', 'error'); this.closest('.p-5').remove();" class="px-4 py-2.5 border border-gray-200 text-gray-600 hover:border-dark rounded-xl text-xs font-bold transition">Decline</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: RISK & SECURITY AUDIT -->
+            <div id="adm-audit" class="adm-content hidden space-y-6">
+                <div class="bg-white p-5 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-dark">Security Shield &amp; Fraud Detection Matrix</h2>
+                        <p class="text-xs text-gray-400">Real-time anti-money laundering (AML) &amp; sanction lists checks.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                        <div class="p-6 rounded-2xl bg-surface border border-gray-100 space-y-2">
+                            <div class="text-xs font-bold text-gray-400 uppercase">Automated AML Score</div>
+                            <div class="text-2xl font-black text-green-600">99.8% Healthy</div>
+                            <p class="text-xs text-gray-500">Zero sanction violations detected across 48,000 transactions.</p>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-surface border border-gray-100 space-y-2">
+                            <div class="text-xs font-bold text-gray-400 uppercase">2FA Enforcement</div>
+                            <div class="text-2xl font-black text-dark">100% Mandatory</div>
+                            <p class="text-xs text-gray-500">All external wire transfers require hardware or biometrics approval.</p>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-surface border border-gray-100 space-y-2">
+                            <div class="text-xs font-bold text-gray-400 uppercase">Data Vault Backup</div>
+                            <div class="text-2xl font-black text-brand-dark">Active (Hourly)</div>
+                            <p class="text-xs text-gray-500">Multi-region immutable blockchain replication.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: CONSOLE SETTINGS WITH VALIDATION CONSTRAINTS -->
+            <div id="adm-settings" class="adm-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-10 rounded-3xl border border-gray-100 shadow-sm max-w-2xl mx-auto">
+                    <div class="mb-6">
+                        <div class="w-12 h-12 bg-brand/20 text-dark rounded-2xl flex items-center justify-center text-xl mb-3">
+                            <i class="fa-solid fa-gears"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-dark">Console Security Settings</h2>
+                        <p class="text-gray-500 text-sm">Configure automated thresholds and notification constraints.</p>
+                    </div>
+
+                    <form id="adminSettingsForm" onsubmit="event.preventDefault(); window.stacklyToast('Admin security thresholds saved successfully.', 'success')" class="space-y-4" data-validate novalidate>
+                        <div class="form-group">
+                            <label for="adminEmail" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Compliance Admin Email</label>
+                            <input type="email" id="adminEmail" name="email" required value="admin@testackly.com" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark focus:outline-none focus:border-dark transition">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="wireThreshold" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Auto-Flag Wire Threshold ($ USD)</label>
+                            <input type="number" id="wireThreshold" name="wireThreshold" required min="1000" max="1000000" value="50000" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark focus:outline-none focus:border-dark transition">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fraudSensitivity" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">AML Risk Sensitivity</label>
+                            <select id="fraudSensitivity" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark font-medium focus:outline-none focus:border-dark transition">
+                                <option value="high">High (Flag all cross-border transactions &gt; $25K)</option>
+                                <option value="medium" selected>Standard (Flag all cross-border transactions &gt; $50K)</option>
+                                <option value="strict">Strict Institutional Mode</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-dark text-white hover:bg-brand hover:text-dark py-3.5 px-6 rounded-xl font-bold transition duration-300 shadow-md">
+                            Save Console Policy
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-100 py-6 px-4 sm:px-8 text-center text-xs text-gray-500 mt-auto">
+            <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p>&copy; Copyright - te stackly Banking Services &bull; Institutional Console</p>
+                <div class="text-xs text-gray-400 font-medium">
+                    <span>Audit Node #1 &bull; Restricted Access</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Navigation & UI Control Scripts -->
+    <script>
+        // Admin Tab Switching Handler
+        function switchAdminTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.adm-content').forEach(el => el.classList.add('hidden'));
+            
+            // Reset all desktop tab buttons
+            document.querySelectorAll('.adm-tab-btn').forEach(el => {
+                el.classList.remove('active-admin-tab', 'bg-brand', 'text-dark');
+                el.classList.add('text-gray-300');
+            });
+
+            // Reset all mobile secondary tab buttons
+            document.querySelectorAll('.mobile-adm-tab-btn').forEach(el => {
+                el.classList.remove('active-admin-tab', 'bg-dark', 'text-brand');
+                el.classList.add('text-gray-600', 'bg-white');
+            });
+
+            // Show active tab
+            const content = document.getElementById(`adm-${tabId}`);
+            if (content) content.classList.remove('hidden');
+
+            // Set active class on desktop tab
+            const btn = document.getElementById(`adm-btn-${tabId}`);
+            if (btn) {
+                btn.classList.add('active-admin-tab');
+                btn.classList.remove('text-gray-300');
+            }
+
+            // Set active class on mobile tab
+            const mobileBtn = document.getElementById(`mobile-adm-${tabId}`);
+            if (mobileBtn) {
+                mobileBtn.classList.add('active-admin-tab', 'bg-dark', 'text-brand');
+                mobileBtn.classList.remove('text-gray-600', 'bg-white');
+            }
+
+            // Close mobile sidebar if open
+            toggleAdminMobileSidebar(false);
+
+            // Scroll to top on mobile
+            if (window.innerWidth < 1024) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Mobile Admin Sidebar Drawer Toggle
+        function toggleAdminMobileSidebar(open) {
+            const sidebar = document.getElementById('adminDashboardSidebar');
+            const backdrop = document.getElementById('adminSidebarBackdrop');
+            if (!sidebar || !backdrop) return;
+
+            if (open) {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+                setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+                document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('opacity-0');
+                setTimeout(() => backdrop.classList.add('hidden'), 300);
+                document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
+            }
+        }
+
+        // Desktop Sidebar Collapse / Expand Toggle
+        let isAdminDesktopSidebarCollapsed = false;
+        function toggleAdminDesktopSidebarCollapse() {
+            if (window.innerWidth < 1024) {
+                toggleAdminMobileSidebar(true);
+                return;
+            }
+
+            const sidebar = document.getElementById('adminDashboardSidebar');
+            const wrapper = document.getElementById('adminMainContentWrapper');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+            const icon = document.getElementById('adminDesktopSidebarToggleIcon');
+
+            isAdminDesktopSidebarCollapsed = !isAdminDesktopSidebarCollapsed;
+
+            if (isAdminDesktopSidebarCollapsed) {
+                sidebar.classList.remove('lg:w-64', 'xl:w-72');
+                sidebar.classList.add('lg:w-20', 'xl:w-20');
+                wrapper.classList.remove('lg:pl-64', 'xl:pl-72');
+                wrapper.classList.add('lg:pl-20', 'xl:pl-20');
+                sidebarTexts.forEach(el => el.classList.add('hidden'));
+                if (icon) icon.className = 'fa-solid fa-arrow-right-to-bracket text-sm';
+            } else {
+                sidebar.classList.remove('lg:w-20', 'xl:w-20');
+                sidebar.classList.add('lg:w-64', 'xl:w-72');
+                wrapper.classList.remove('lg:pl-20', 'xl:pl-20');
+                wrapper.classList.add('lg:pl-64', 'xl:pl-72');
+                sidebarTexts.forEach(el => el.classList.remove('hidden'));
+                if (icon) icon.className = 'fa-solid fa-bars text-sm';
+            }
+        }
+
+        // Close on Escape Key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                toggleAdminMobileSidebar(false);
+            }
+        });
+    </script>
+    <script src="validation.js"></script>
+</body>
+</html>

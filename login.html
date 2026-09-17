@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Portal Login - te stackly Banking</title>
+    <meta name="description" content="Access your te stackly personal accounts, institutional wealth management, and private banking portal.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#d4ff33', // Vibrant lime green
+                        'brand-dark': '#b3d929',
+                        dark: '#1a1a1a',
+                        surface: '#f9f9f9',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dot-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.05) 2px, transparent 2px);
+            background-size: 24px 24px;
+        }
+        .auth-card-blur {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-surface selection:bg-brand selection:text-dark antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white border-b border-gray-100 py-4 px-4 sm:px-8">
+        <div class="max-w-[1400px] mx-auto flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 group" aria-label="te stackly homepage">
+                <div class="bg-dark px-3.5 py-1.5 rounded-2xl flex items-center border border-brand/40 shadow-sm group-hover:border-brand group-hover:shadow-[0_0_15px_rgba(212,255,51,0.25)] transition duration-300">
+                    <img src="images/stackly logo.webp" alt="te stackly" class="h-6 sm:h-7 w-auto object-contain">
+                </div>
+            </a>
+            
+            <div class="flex items-center gap-4 text-sm font-medium">
+                <span class="text-gray-500 hidden sm:inline">New to te stackly?</span>
+                <a href="signup.html" class="px-5 py-2.5 bg-dark text-white rounded-full hover:bg-brand hover:text-dark transition duration-300 shadow-sm">
+                    Open Account
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Auth Container -->
+    <main class="flex-1 max-w-[1300px] w-full mx-auto px-4 sm:px-8 py-8 lg:py-12 flex items-center justify-center">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 w-full items-center">
+            
+            <!-- Left Branding & Market Info Column (Visible on LG screens) -->
+            <div class="hidden lg:flex lg:col-span-5 flex-col justify-between p-8 bg-dark text-white rounded-3xl relative overflow-hidden shadow-2xl min-h-[580px]">
+                <div class="absolute -right-16 -top-16 w-64 h-64 bg-brand/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-brand/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 space-y-6">
+                    <div class="mb-2">
+                        <img src="images/stackly logo.webp" alt="te stackly" class="h-8 w-auto object-contain">
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-brand text-xs font-semibold uppercase tracking-wider">
+                        <i class="fa-solid fa-shield-halved"></i> 256-Bit Financial Vault
+                    </div>
+                    <h1 class="text-3xl xl:text-4xl font-extrabold tracking-tight leading-tight">
+                        Empowering Smarter Financial Growth.
+                    </h1>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Access real-time capital allocation, institutional wealth management, and high-yield portfolio monitoring through a unified secure console.
+                    </p>
+                </div>
+
+                <!-- Market Overview Card -->
+                <div class="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-5 my-6 backdrop-blur-sm space-y-3">
+                    <div class="flex items-center justify-between text-xs text-gray-400 font-medium">
+                        <span>PORTFOLIO APY INDEX</span>
+                        <span class="text-brand flex items-center gap-1"><i class="fa-solid fa-arrow-trend-up"></i> +14.8%</span>
+                    </div>
+                    <div class="text-2xl font-black text-white">$128,450.00</div>
+                    <div class="w-full bg-white/10 rounded-full h-1.5">
+                        <div class="bg-brand h-1.5 rounded-full" style="width: 78%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-400 pt-1">
+                        <span>Liquid Assets: $45.2K</span>
+                        <span>Investments: $83.2K</span>
+                    </div>
+                </div>
+
+                <!-- Security Assurance -->
+                <div class="relative z-10 flex items-center gap-4 text-xs text-gray-400 border-t border-white/10 pt-4">
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock text-brand"></i> End-to-End Encrypted
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-building-columns text-brand"></i> FDIC Insured
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Login Form Column -->
+            <div class="lg:col-span-7 flex justify-center">
+                <div class="w-full max-w-[540px] bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-gray-100 relative">
+                    
+                    <div class="mb-6 text-center sm:text-left">
+                        <div class="w-12 h-12 bg-brand/20 text-dark rounded-2xl flex items-center justify-center text-xl mb-4 mx-auto sm:mx-0">
+                            <i class="fa-solid fa-fingerprint text-dark"></i>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-dark">Welcome Back</h2>
+                        <p class="text-gray-500 text-sm mt-1">Please sign in to your verified te stackly account.</p>
+                    </div>
+
+                    <!-- 1-Click Demo Quick Fillers -->
+                    <div class="bg-surface border border-gray-200/80 rounded-2xl p-3.5 mb-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Quick Demo Access</span>
+                            <span class="text-[11px] text-gray-400">Click to autofill credentials</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" onclick="fillDemoCredentials('user')" class="py-2 px-3 text-xs font-semibold bg-white border border-gray-200 hover:border-dark rounded-xl text-dark transition flex items-center justify-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-user text-gray-500"></i> Client Portal
+                            </button>
+                            <button type="button" onclick="fillDemoCredentials('admin')" class="py-2 px-3 text-xs font-semibold bg-white border border-gray-200 hover:border-dark rounded-xl text-dark transition flex items-center justify-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-shield-halved text-gray-500"></i> Admin Console
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" class="space-y-4" novalidate>
+                        
+                        <!-- Account Role Selector -->
+                        <div class="form-group">
+                            <label for="loginRole" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Portal Type</label>
+                            <div class="relative">
+                                <select id="loginRole" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark font-medium focus:outline-none focus:border-dark transition appearance-none cursor-pointer">
+                                    <option value="user">Personal &amp; Business Banking Client</option>
+                                    <option value="admin">Wealth Advisor &amp; Banking Administrator</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-group">
+                            <label for="loginEmail" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Email Address</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                    <i class="fa-solid fa-envelope text-sm"></i>
+                                </div>
+                                <input type="email" id="loginEmail" name="email" required placeholder="name@domain.com" class="w-full bg-white border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm text-dark placeholder-gray-400 focus:outline-none focus:border-dark transition">
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label for="loginPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-600">Password</label>
+                                <a href="404.html" class="text-xs text-gray-500 hover:text-dark font-medium transition">Forgot password?</a>
+                            </div>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                    <i class="fa-solid fa-lock text-sm"></i>
+                                </div>
+                                <input type="password" id="loginPassword" name="password" required placeholder="Enter your password" class="w-full bg-white border border-gray-200 rounded-xl pl-10 pr-10 py-3 text-sm text-dark placeholder-gray-400 focus:outline-none focus:border-dark transition">
+                                <button type="button" onclick="togglePasswordVisibility('loginPassword', 'pwdIcon')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-dark">
+                                    <i class="fa-solid fa-eye text-sm" id="pwdIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Remember Device -->
+                        <div class="flex items-center justify-between pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-dark focus:ring-brand accent-dark">
+                                <span class="text-xs text-gray-600 font-medium select-none">Remember this device for 30 days</span>
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full mt-4 bg-dark text-white hover:bg-brand hover:text-dark py-3.5 px-6 rounded-xl font-bold transition duration-300 shadow-md flex items-center justify-center gap-2 group">
+                            <span>Sign In to Portal</span>
+                            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition duration-200"></i>
+                        </button>
+                    </form>
+
+                    <!-- Footer Link -->
+                    <div class="mt-6 pt-6 border-t border-gray-100 text-center text-xs text-gray-500">
+                        Don't have an account yet? 
+                        <a href="signup.html" class="font-bold text-dark hover:text-brand transition ml-1 underline underline-offset-2">
+                            Open an account in 3 minutes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 py-6 px-4 text-center text-xs text-gray-500">
+        <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>&copy; Copyright - te stackly Banking Services | All Rights Reserved</p>
+            <div class="flex items-center gap-6">
+                <a href="services.html" class="hover:text-dark transition">Services</a>
+                <a href="about.html" class="hover:text-dark transition">About</a>
+                <a href="contact.html" class="hover:text-dark transition">Security &amp; Support</a>
+                <a href="404.html" class="hover:text-dark transition">Help Center</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Validation & Auth Script -->
+    <script src="validation.js"></script>
+</body>
+</html>

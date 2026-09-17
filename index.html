@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>te stackly - Achieve Financial Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#d4ff33', // Vibrant lime green
+                        'brand-dark': '#b3d929',
+                        dark: '#1a1a1a',
+                        surface: '#f9f9f9',
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dot-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.05) 2px, transparent 2px);
+            background-size: 24px 24px;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #1a1a1a;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Reveal animation classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white selection:bg-brand selection:text-dark antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <header class="sticky top-0 bg-white/95 backdrop-blur-md z-40 border-b border-gray-100 shadow-sm transition-all duration-300" id="main-nav">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-2 group" aria-label="te stackly homepage">
+                <div class="bg-dark px-3.5 py-1.5 rounded-2xl flex items-center border border-brand/40 shadow-sm group-hover:border-brand group-hover:shadow-[0_0_15px_rgba(212,255,51,0.25)] transition duration-300">
+                    <img src="images/stackly logo.webp" alt="te stackly" class="h-6 sm:h-7 w-auto object-contain">
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden lg:flex items-center gap-8 font-medium text-gray-700">
+                <a href="index.html" class="nav-link active text-dark">Home</a>
+                <a href="services.html" class="nav-link hover:text-dark transition">Services</a>
+                <a href="about.html" class="nav-link hover:text-dark transition">About Us</a>
+                <a href="blog.html" class="nav-link hover:text-dark transition">Blog</a>
+                <a href="contact.html" class="nav-link hover:text-dark transition">Contact</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="hidden md:flex items-center gap-6">
+                <a href="login.html" class="flex items-center gap-2 font-medium hover:text-brand transition">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+                </a>
+                <a href="signup.html" class="bg-dark text-white px-6 py-3 rounded-full font-medium hover:bg-brand hover:text-dark transition duration-300 shadow-sm">
+                    Open Account
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden text-2xl text-dark p-2" id="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu (Hidden by default) -->
+        <div class="lg:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 hidden shadow-xl z-50 transition-all duration-300" id="mobile-menu">
+            <nav class="flex flex-col p-6 font-medium text-gray-700 space-y-2">
+                <a href="index.html" class="py-3 border-b border-gray-100 text-dark font-bold">Home</a>
+                <a href="services.html" class="py-3 border-b border-gray-100 hover:text-dark transition">Services</a>
+                <a href="about.html" class="py-3 border-b border-gray-100 hover:text-dark transition">About Us</a>
+                <a href="blog.html" class="py-3 border-b border-gray-100 hover:text-dark transition">Blog</a>
+                <a href="contact.html" class="py-3 hover:text-dark transition">Contact</a>
+                <div class="pt-4 flex flex-col gap-3">
+                    <a href="login.html" class="text-center py-3 border border-gray-200 rounded-xl font-medium hover:border-dark transition">Login</a>
+                    <a href="signup.html" class="text-center py-3 bg-dark text-white rounded-xl font-semibold hover:bg-brand hover:text-dark transition">Open Account</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-12 lg:py-20 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        
+        <!-- Left Content -->
+        <div class="w-full lg:w-1/2 flex flex-col gap-8 relative z-10">
+            <div class="inline-flex items-center gap-2 bg-surface px-4 py-2 rounded-full text-sm font-medium border border-gray-200 w-max shadow-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand animate-pulse"></span> Banking Services
+            </div>
+            
+            <h1 class="text-5xl lg:text-7xl font-bold leading-tight text-dark tracking-tight">
+                Achieve Financial <br> <span class="relative">Success<span class="absolute bottom-2 left-0 w-full h-3 bg-brand/40 -z-10 rounded-full"></span></span> from Here.
+            </h1>
+            
+            <p class="text-lg text-gray-600 max-w-md leading-relaxed">
+                If you are opening your first savings account, looking for a reliable partner for your business, or planning your financial future, we're here for you in Salem.
+            </p>
+            
+            <div class="flex flex-wrap items-center gap-4">
+                <a href="services.html" class="bg-brand text-dark px-8 py-4 rounded-full font-bold hover:bg-dark hover:text-white transition duration-300 shadow-md flex items-center gap-2">
+                    Get Started <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a href="about.html" class="bg-white text-dark px-8 py-4 rounded-full font-semibold border border-gray-200 hover:border-dark transition duration-300">
+                    Explore More
+                </a>
+            </div>
+
+            <!-- Stats/Social Proof below buttons -->
+            <div class="flex items-center gap-8 mt-4 pt-8 border-t border-gray-100">
+                <div>
+                    <div class="flex -space-x-3 mb-2">
+                        <img src="images/c1.webp" alt="Client Avatar 1" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
+                        <img src="images/c2.webp" alt="Client Avatar 2" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
+                        <img src="images/c3.webp" alt="Client Avatar 3" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm">
+                    </div>
+                    <div class="font-bold text-2xl text-dark">120K+</div>
+                    <div class="text-sm text-gray-500 font-medium">Active Users</div>
+                </div>
+                
+                <div class="w-px h-12 bg-gray-200"></div>
+
+                <div>
+                    <div class="flex gap-2 text-brand text-xl mb-2">
+                        <i class="fa-solid fa-trophy text-dark bg-brand p-2 rounded-full text-xs shadow-sm"></i>
+                        <i class="fa-solid fa-medal text-dark bg-brand p-2 rounded-full text-xs shadow-sm"></i>
+                        <i class="fa-solid fa-award text-dark bg-brand p-2 rounded-full text-xs shadow-sm"></i>
+                    </div>
+                    <div class="font-bold text-2xl text-dark">30+ Awards</div>
+                    <div class="text-sm text-gray-500 font-medium">Best in Class Bank</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Image Group -->
+        <div class="w-full lg:w-1/2 relative flex justify-end">
+            <!-- Background Glow -->
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-brand/20 rounded-full -z-10 blur-3xl opacity-60"></div>
+            
+            <div class="relative w-full max-w-lg aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl bg-dark group">
+                <!-- Main Rich Hero Photo -->
+                <img src="images/home hero.webp" alt="Happy Customer with Banking App" class="w-full h-full object-cover object-top transition duration-700 group-hover:scale-105">
+                
+                <!-- Dark gradient overlay at bottom for card pop -->
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent"></div>
+
+                <!-- Floating Element 1: Card badge -->
+                <div class="absolute bottom-6 left-4 sm:bottom-10 sm:left-[-1.5rem] bg-dark text-white p-4 sm:p-5 rounded-2xl shadow-2xl flex items-center gap-4 transform -rotate-3 hover:rotate-0 transition duration-300 border border-gray-700">
+                    <div class="bg-brand text-dark p-3 rounded-xl shadow-md"><i class="fa-solid fa-credit-card text-xl"></i></div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">te stackly Platinum</p>
+                        <p class="text-sm sm:text-base font-bold font-mono text-white">•••• •••• •••• 7628</p>
+                    </div>
+                </div>
+                
+                <!-- Floating Element 2: Approval badge -->
+                <div class="absolute top-8 right-4 sm:top-12 sm:right-[-1rem] bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-2xl shadow-2xl flex items-center gap-3 transform rotate-6 hover:rotate-0 transition duration-300 border border-white">
+                    <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-base font-bold shadow-sm"><i class="fa-solid fa-check"></i></div>
+                    <div>
+                        <p class="text-[11px] text-gray-500 font-medium">Transfer Approved</p>
+                        <p class="text-sm font-bold text-dark">+$4,850.00 USD</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Text Strip -->
+    <div class="bg-dark text-white py-5 overflow-hidden relative flex items-center whitespace-nowrap border-y border-gray-800 shadow-inner">
+        <div class="animate-marquee flex w-max">
+            <!-- Set 1 -->
+            <div class="flex items-center gap-8 px-4">
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Instant Account</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Modern Banking App</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 5K+ Global ATMs</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 24/7 Salem Support</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Zero Hidden Fees</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Fast Wire Transfers</span>
+            </div>
+            <!-- Set 2 -->
+            <div class="flex items-center gap-8 px-4">
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Instant Account</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Modern Banking App</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 5K+ Global ATMs</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 24/7 Salem Support</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Zero Hidden Fees</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Fast Wire Transfers</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tailored Banking Options -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-24">
+        <div class="flex flex-col lg:flex-row gap-16">
+            
+            <!-- Left Sticky Text -->
+            <div class="w-full lg:w-1/3 lg:sticky lg:top-32 h-max">
+                <div class="inline-flex items-center gap-2 bg-surface px-4 py-2 rounded-full text-sm font-medium border border-gray-200 mb-6 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-brand"></span> Banking Services
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-dark leading-tight mb-6">
+                    Tailored Banking Options for All Needs.
+                </h2>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    We understand that every customer has unique financial goals. That's why we offer a comprehensive range of personal and business solutions designed to help you thrive.
+                </p>
+                <a href="services.html" class="bg-brand text-dark px-8 py-4 rounded-full font-bold hover:bg-dark hover:text-white transition duration-300 inline-flex items-center gap-2 shadow-md">
+                    Explore All Services <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Right Cards Grid -->
+            <div class="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="bg-surface rounded-[2rem] overflow-hidden group border border-gray-200 hover:border-brand hover:shadow-xl transition-all duration-300">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="images/pexels-cottonbro-5077047.webp" alt="Mobile Banking" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-dark text-xs font-bold px-3 py-1 rounded-full shadow-sm">Personal</div>
+                    </div>
+                    <div class="p-8">
+                        <div class="w-12 h-12 bg-brand rounded-full flex items-center justify-center mb-4 text-xl text-dark shadow-sm">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-dark mb-3">Everyday Checking & Savings</h3>
+                        <p class="text-gray-600 text-sm mb-6">Experience intelligent banking with zero monthly maintenance fees, high APY savings, and instant mobile deposits.</p>
+                        <a href="services.html" class="w-10 h-10 border border-gray-300 rounded-full flex items-center justify-center text-dark hover:bg-brand hover:border-brand transition group-hover:rotate-45">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-brand rounded-[2rem] overflow-hidden group flex flex-col justify-between shadow-lg border border-brand-dark">
+                    <div class="p-8">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4 text-xl text-dark shadow-sm">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-dark mb-3">Personal Loans & Mortgages</h3>
+                        <p class="text-dark/90 text-sm mb-6 font-medium">Competitive low interest rates for first-time home buyers, auto financing, and debt consolidation in Oregon.</p>
+                        <a href="services.html" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-dark hover:bg-dark hover:text-white transition group-hover:-rotate-45">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                    <div class="h-44 overflow-hidden mx-4 mb-4 rounded-2xl">
+                        <img src="images/pexels-kampus-8441811.webp" alt="Financial Consultation" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-dark text-white rounded-[2rem] overflow-hidden group col-span-1 md:col-span-2 flex flex-col md:flex-row items-center border border-gray-800 hover:border-gray-700 transition shadow-xl">
+                    <div class="p-8 md:w-1/2">
+                        <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mb-4 text-xl text-brand border border-gray-700">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Digital Security & Wealth Portfolios</h3>
+                        <p class="text-gray-400 text-sm mb-6">Our 256-bit encrypted platform allows you to manage multi-currency accounts, invest in diversified funds, and monitor real-time security alerts.</p>
+                        <a href="services.html" class="inline-flex items-center gap-2 text-brand font-bold hover:text-white transition">
+                            Explore Security Features <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="w-full md:w-1/2 h-64 md:h-72 p-4">
+                        <img src="images/pexels-artempodrez-5716027.webp" alt="Secure Banking Analytics" class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition duration-500">
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-surface rounded-[2rem] overflow-hidden group col-span-1 md:col-span-2 relative h-[380px] border border-gray-200">
+                    <img src="images/pexels-arina-krasnikova-6016344.webp" alt="Family Financial Protection" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent"></div>
+                    <div class="relative p-8 md:p-12 h-full flex flex-col justify-center max-w-lg z-10">
+                        <div class="w-12 h-12 bg-white shadow-md border border-gray-100 rounded-full flex items-center justify-center mb-4 text-xl text-dark">
+                            <i class="fa-solid fa-heart-pulse text-brand"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-dark mb-4">Comprehensive Family & Life Insurance</h3>
+                        <p class="text-gray-700 mb-8 font-medium">Protect what matters most. Tailored life, health, and property insurance plans with fast payouts and dedicated local claims specialists.</p>
+                        <a href="services.html" class="w-12 h-12 bg-dark text-white rounded-full flex items-center justify-center hover:bg-brand hover:text-dark transition group-hover:-rotate-45 shadow-md">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Innovative Features Section -->
+    <section class="relative pt-20 pb-40">
+        <div class="max-w-4xl mx-auto text-center px-4 mb-16 relative z-10">
+            <div class="inline-flex items-center gap-2 bg-surface px-4 py-2 rounded-full text-sm font-medium border border-gray-200 mb-6 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-brand"></span> Unique Features
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-dark leading-tight mb-6">
+                Innovative Banking Features Tailored for You.
+            </h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                We pride ourselves on offering a suite of modern features engineered to elevate your daily financial life.
+            </p>
+        </div>
+
+        <!-- Green Patterned Background Block -->
+        <div class="absolute bottom-0 left-0 w-full h-3/4 bg-brand dot-pattern"></div>
+        
+        <!-- Marquee separator -->
+        <div class="absolute top-[25%] sm:top-[35%] w-full bg-transparent overflow-hidden whitespace-nowrap z-0 border-y border-dark/10 py-2 sm:py-4">
+            <div class="animate-marquee flex w-max">
+                <div class="flex items-center px-4">
+                    <span class="text-dark/20 text-3xl sm:text-4xl font-bold mx-4 sm:mx-8">✦ Cashback Rewards ✦ Financial Advice ✦ Online Banking ✦ Instant Account ✦ Biometric Security</span>
+                </div>
+                <div class="flex items-center px-4">
+                    <span class="text-dark/20 text-3xl sm:text-4xl font-bold mx-4 sm:mx-8">✦ Cashback Rewards ✦ Financial Advice ✦ Online Banking ✦ Instant Account ✦ Biometric Security</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlapping Cards Grid -->
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                
+                <!-- Feature Card 1 -->
+                <div class="bg-white rounded-3xl p-4 shadow-md hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center group">
+                    <div class="w-full h-32 rounded-2xl bg-gray-100 mb-4 overflow-hidden relative">
+                         <img src="images/pexels-shkrabaanthony-5466244.webp" alt="Customer Support" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                         <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition duration-300"></div>
+                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/95 backdrop-blur rounded-full flex items-center justify-center text-dark border border-gray-200 shadow-md">
+                             <i class="fa-solid fa-headset text-brand"></i>
+                         </div>
+                    </div>
+                    <h4 class="font-bold text-sm text-dark">24/7 Support</h4>
+                </div>
+
+                <!-- Feature Card 2 -->
+                <div class="bg-dark rounded-3xl p-4 shadow-xl hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center group mt-8 lg:mt-12 border border-gray-800">
+                    <div class="w-full h-32 rounded-2xl bg-gray-800 mb-4 overflow-hidden relative">
+                         <img src="images/pexels-cottonbro-5077047.webp" alt="Security System" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
+                         <div class="absolute inset-0 bg-dark/40 group-hover:bg-dark/10 transition duration-300"></div>
+                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-dark/95 border border-gray-700 rounded-full flex items-center justify-center text-brand shadow-md">
+                             <i class="fa-solid fa-lock"></i>
+                         </div>
+                    </div>
+                    <h4 class="font-bold text-sm text-white">Advanced Security</h4>
+                </div>
+
+                <!-- Feature Card 3 -->
+                <div class="bg-white rounded-3xl p-4 shadow-md hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center group">
+                    <div class="w-full h-32 rounded-2xl bg-gray-100 mb-4 overflow-hidden relative">
+                         <img src="images/pexels-tima-miroshnichenko-6694492.webp" alt="Cashback Rewards" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                         <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition duration-300"></div>
+                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/95 backdrop-blur rounded-full flex items-center justify-center text-dark border border-gray-200 shadow-md">
+                             <i class="fa-solid fa-money-bill-wave text-brand"></i>
+                         </div>
+                    </div>
+                    <h4 class="font-bold text-sm text-dark">Cashback Rewards</h4>
+                </div>
+
+                <!-- Feature Card 4 -->
+                <div class="bg-white rounded-3xl p-4 shadow-md hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center group mt-8 lg:mt-12">
+                    <div class="w-full h-32 rounded-2xl bg-gray-100 mb-4 overflow-hidden relative">
+                         <img src="images/pexels-artempodrez-6779716.webp" alt="Financial Advice" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                         <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition duration-300"></div>
+                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/95 backdrop-blur rounded-full flex items-center justify-center text-dark border border-gray-200 shadow-md">
+                             <i class="fa-solid fa-chart-line text-brand"></i>
+                         </div>
+                    </div>
+                    <h4 class="font-bold text-sm text-dark">Financial Advice</h4>
+                </div>
+
+                <!-- Feature Card 5 -->
+                <div class="bg-dark rounded-3xl p-4 shadow-xl hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center group border border-gray-800">
+                    <div class="w-full h-32 rounded-2xl bg-gray-800 mb-4 overflow-hidden relative">
+                         <img src="images/pexels-artempodrez-6779570.webp" alt="Online Banking" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
+                         <div class="absolute inset-0 bg-dark/40 group-hover:bg-dark/10 transition duration-300"></div>
+                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-dark/95 border border-gray-700 rounded-full flex items-center justify-center text-brand shadow-md">
+                             <i class="fa-solid fa-laptop"></i>
+                         </div>
+                    </div>
+                    <h4 class="font-bold text-sm text-white">Online Banking</h4>
+                </div>
+
+                <!-- Feature Card 6 -->
+                <div class="bg-white rounded-3xl p-4 shadow-md hover:-translate-y-2 transition duration-300 flex flex-col items-center text-center group mt-8 lg:mt-12">
+                    <div class="w-full h-32 rounded-2xl bg-gray-100 mb-4 overflow-hidden relative">
+                         <img src="images/pexels-karola-g-8530079.webp" alt="Instant Account Setup" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                         <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition duration-300"></div>
+                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/95 backdrop-blur rounded-full flex items-center justify-center text-dark border border-gray-200 shadow-md">
+                             <i class="fa-solid fa-bolt text-brand"></i>
+                         </div>
+                    </div>
+                    <h4 class="font-bold text-sm text-dark">Instant Account</h4>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats & About Section -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-20">
+        <div class="flex flex-col items-center">
+            
+            <a href="about.html" class="bg-brand text-dark px-8 py-3 rounded-full font-bold hover:bg-dark hover:text-white transition duration-300 mb-12 shadow-md inline-flex items-center gap-2">
+                More About Us <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+
+            <!-- Big Image with floating stats -->
+            <div class="relative w-full max-w-5xl rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden mb-12 bg-surface shadow-2xl border border-gray-100 group">
+                <img src="images/pexels-kampus-8171202.webp" alt="Salem Advisory Team" class="w-full h-[350px] sm:h-[500px] object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/70 via-transparent to-transparent"></div>
+
+                <!-- Floating Stat 1 -->
+                <div class="absolute bottom-6 left-6 sm:bottom-12 sm:left-12 bg-dark/95 backdrop-blur-md text-white p-5 sm:p-6 rounded-3xl shadow-2xl border border-gray-700">
+                    <div class="text-brand mb-2"><i class="fa-solid fa-building-columns text-2xl"></i></div>
+                    <h3 class="text-2xl sm:text-4xl font-bold mb-1">5K+</h3>
+                    <p class="text-gray-300 text-xs sm:text-sm font-medium">Free ATMs Across<br>North America</p>
+                </div>
+
+                <!-- Floating Stat 2 -->
+                <div class="absolute bottom-6 right-6 sm:bottom-12 sm:right-12 bg-brand text-dark p-5 sm:p-6 rounded-3xl shadow-2xl">
+                    <div class="text-dark mb-2"><i class="fa-solid fa-users text-2xl"></i></div>
+                    <h3 class="text-2xl sm:text-4xl font-bold mb-1">3K+</h3>
+                    <p class="text-dark/90 text-xs sm:text-sm font-bold">Experienced Advisors<br>Ready to Guide You</p>
+                </div>
+            </div>
+
+            <!-- Bottom Information Cards -->
+            <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Left Dark Card -->
+                <div class="bg-[#1c2723] text-white p-10 rounded-[2.5rem] flex flex-col justify-center border border-gray-800 shadow-xl">
+                    <div class="text-brand text-xl mb-4 flex gap-1">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Dedicated to Your Complete Satisfaction.</h3>
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed">Our mission is to empower individuals and businesses with frictionless financial tools and local expertise.</p>
+                    <a href="services.html" class="bg-brand text-dark px-6 py-3 rounded-full font-bold w-max hover:bg-white transition shadow-sm">Explore Services</a>
+                </div>
+
+                <!-- Middle Rating Card -->
+                <div class="bg-gradient-to-br from-[#8dbd3f] to-[#5a8022] rounded-[2.5rem] relative overflow-hidden flex items-center justify-center p-8 shadow-xl">
+                    <div class="relative w-56 h-64">
+                         <div class="absolute inset-0 bg-white rounded-3xl shadow-2xl transform -rotate-6 p-4 flex flex-col items-center justify-center border border-gray-100">
+                             <img src="images/c1.webp" alt="Client Review" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover border-2 border-brand">
+                             <div class="text-center font-bold text-xl text-dark">4.9/5 <i class="fa-solid fa-star text-brand text-sm"></i></div>
+                             <p class="text-xs text-gray-500 text-center font-medium mt-1">"Outstanding Service!"</p>
+                         </div>
+                         <div class="absolute inset-0 bg-dark text-white rounded-3xl shadow-2xl transform rotate-6 p-4 flex flex-col items-center justify-center translate-x-8 translate-y-4 border border-gray-700">
+                             <img src="images/c2.webp" alt="Client Review" class="w-16 h-16 rounded-full mx-auto mb-2 object-cover border-2 border-brand">
+                             <div class="text-center font-bold text-xl text-brand">5.0/5 <i class="fa-solid fa-star text-white text-sm"></i></div>
+                             <p class="text-xs text-gray-400 text-center font-medium mt-1">"Best app in Salem."</p>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Right Light Card -->
+                <div class="bg-brand p-10 rounded-[2.5rem] flex flex-col justify-center shadow-xl border border-brand-dark">
+                    <div class="flex items-center gap-4 mb-6">
+                         <div class="flex -space-x-3">
+                            <img src="images/p1.webp" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-brand object-cover shadow-sm">
+                            <img src="images/p2.webp" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-brand object-cover shadow-sm">
+                        </div>
+                        <div class="bg-dark text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">1M+ Transfers</div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-dark mb-4">We are Dedicated to Your Financial Success.</h3>
+                    <p class="text-dark/90 text-sm mb-8 font-medium leading-relaxed">Our commitment to state-of-the-art security and community investment sets us apart.</p>
+                    <a href="about.html" class="bg-white text-dark px-6 py-3 rounded-full font-bold w-max hover:bg-dark hover:text-white transition shadow-sm">Story & Mission</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Download & Stats Section -->
+    <section class="bg-dark text-white py-24 border-y border-gray-800 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-brand/5 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row justify-between items-start gap-12 border-b border-gray-800 pb-16 mb-16">
+                <!-- Left Title -->
+                <div class="w-full lg:w-1/2">
+                    <div class="inline-block border border-gray-700 bg-gray-800/80 rounded-full px-4 py-2 text-sm text-brand mb-6 font-medium">
+                        Get the Mobile App
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold leading-tight">
+                        Innovative Banking in the Palm of Your Hand.
+                    </h2>
+                </div>
+                
+                <!-- Right Content -->
+                <div class="w-full lg:w-1/2 lg:pl-12">
+                    <p class="text-gray-400 mb-8 max-w-md text-lg leading-relaxed">
+                        Elevate your financial control with the te stackly mobile app. Send money in seconds, budget smartly with AI, and freeze cards instantly.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="404.html" class="bg-brand text-dark px-6 py-3.5 rounded-xl font-bold flex items-center gap-3 hover:bg-white transition shadow-lg">
+                            <i class="fa-brands fa-android text-2xl"></i> Download for Android
+                        </a>
+                        <a href="404.html" class="bg-gray-800 border border-gray-700 text-white px-6 py-3.5 rounded-xl font-bold flex items-center gap-3 hover:bg-gray-700 transition shadow-lg">
+                            <i class="fa-brands fa-apple text-2xl"></i> Download for iPhone
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Big Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-gray-800 text-center">
+                <div class="px-4">
+                    <h3 class="text-4xl md:text-5xl font-extrabold mb-2 text-white">20+</h3>
+                    <p class="text-gray-400 text-sm font-semibold uppercase tracking-wider">Years In Salem</p>
+                </div>
+                <div class="px-4">
+                    <h3 class="text-4xl md:text-5xl font-extrabold mb-2 text-brand">50K+</h3>
+                    <p class="text-gray-400 text-sm font-semibold uppercase tracking-wider">Loans Approved</p>
+                </div>
+                <div class="px-4">
+                    <h3 class="text-4xl md:text-5xl font-extrabold mb-2 text-white">$2.0B+</h3>
+                    <p class="text-gray-400 text-sm font-semibold uppercase tracking-wider">Total Assets</p>
+                </div>
+                <div class="px-4 border-r-0">
+                    <h3 class="text-4xl md:text-5xl font-extrabold mb-2 text-brand">99.9%</h3>
+                    <p class="text-gray-400 text-sm font-semibold uppercase tracking-wider">Uptime Reliability</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-24">
+        <div class="flex flex-col lg:flex-row gap-16">
+            
+            <!-- Left Sticky Content -->
+            <div class="w-full lg:w-1/3 lg:sticky lg:top-32 h-max">
+                <div class="inline-block border border-gray-200 text-gray-700 rounded-full px-4 py-2 text-sm mb-6 bg-surface font-medium shadow-sm">
+                    Banking Process
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-dark leading-tight mb-6">
+                    How It Works: Easy Steps to Get Started.
+                </h2>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    Our streamlined onboarding process is engineered for minimal friction. Open an account, verify your ID, and start transacting in under 3 minutes.
+                </p>
+                <a href="contact.html" class="bg-brand text-dark px-8 py-4 rounded-full font-bold hover:bg-dark hover:text-white transition inline-flex items-center gap-2 shadow-md">
+                    Open Account Now <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Right Process Cards -->
+            <div class="w-full lg:w-2/3 flex flex-col gap-6 relative">
+                <!-- Line connecting steps -->
+                <div class="hidden md:block absolute left-12 top-10 bottom-10 w-0.5 bg-gray-200 -z-10"></div>
+
+                <!-- Step 1 -->
+                <div class="bg-surface rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start relative shadow-md border border-brand bg-gradient-to-r from-surface to-brand/10">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm min-w-[260px] z-10 border-l-4 border-brand">
+                        <div class="text-3xl font-bold text-brand mb-2">#01</div>
+                        <h3 class="text-2xl font-bold text-dark mb-3">Sign Up Online</h3>
+                        <p class="text-gray-600 text-sm mb-4">Start by filling out our quick online registration form with basic details.</p>
+                        <ul class="text-sm text-dark space-y-2">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand mt-1"></i> Quick 2-minute registration form</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand mt-1"></i> Instant email confirmation code</li>
+                        </ul>
+                    </div>
+                    <div class="flex-grow w-full rounded-2xl overflow-hidden h-56 md:h-64 shadow-sm">
+                        <img src="images/pexels-cottonbro-5077047.webp" alt="Sign Up on Smartphone" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-surface rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start relative shadow-sm border border-gray-200 hover:border-brand transition">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm min-w-[260px] z-10 border-l-4 border-gray-300">
+                        <div class="text-3xl font-bold text-gray-400 mb-2">#02</div>
+                        <h3 class="text-2xl font-bold text-dark mb-3">Verify Identity</h3>
+                        <p class="text-gray-600 text-sm mb-4">Verify your identity instantly via encrypted biometric scan to safeguard your funds.</p>
+                        <ul class="text-sm text-dark space-y-2">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand mt-1"></i> Take a quick photo of government ID</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand mt-1"></i> AI biometric validation in 30 seconds</li>
+                        </ul>
+                    </div>
+                    <div class="flex-grow w-full rounded-2xl overflow-hidden h-56 md:h-64 shadow-sm">
+                        <img src="images/pexels-artempodrez-5716027.webp" alt="Identity Verification" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-surface rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start relative shadow-sm border border-gray-200 hover:border-brand transition">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm min-w-[260px] z-10 border-l-4 border-gray-300">
+                        <div class="text-3xl font-bold text-gray-400 mb-2">#03</div>
+                        <h3 class="text-2xl font-bold text-dark mb-3">Start Banking</h3>
+                        <p class="text-gray-600 text-sm mb-4">Your virtual card is activated immediately. Fund your account and enjoy rewards.</p>
+                        <ul class="text-sm text-dark space-y-2">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand mt-1"></i> Add virtual card to Apple/Google Pay</li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand mt-1"></i> Enjoy unlimited 3% cashback rewards</li>
+                        </ul>
+                    </div>
+                    <div class="flex-grow w-full rounded-2xl overflow-hidden h-56 md:h-64 shadow-sm">
+                        <img src="images/pexels-tima-miroshnichenko-6694492.webp" alt="Start Banking Immediately" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section class="bg-[#1c2723] text-white py-24 relative overflow-hidden">
+        <div class="absolute inset-0 dot-pattern opacity-10"></div>
+
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-16">
+            
+            <!-- Vertical Text & Controls -->
+            <div class="lg:w-1/12 flex lg:flex-col items-center justify-between h-full gap-8">
+                 <div class="transform lg:-rotate-90 text-brand font-bold tracking-widest whitespace-nowrap text-xl">
+                    Client Voices
+                 </div>
+                 <div class="flex lg:flex-col gap-4">
+                     <button onclick="window.location.href='404.html'" class="w-12 h-12 rounded-full border border-gray-600 flex items-center justify-center hover:bg-brand hover:text-dark hover:border-brand transition" aria-label="Previous Testimonial"><i class="fa-solid fa-arrow-left"></i></button>
+                     <button onclick="window.location.href='404.html'" class="w-12 h-12 rounded-full bg-brand text-dark flex items-center justify-center hover:bg-white transition" aria-label="Next Testimonial"><i class="fa-solid fa-arrow-right"></i></button>
+                 </div>
+            </div>
+
+            <!-- Image Area -->
+            <div class="w-full lg:w-5/12 h-[480px] rounded-[2.5rem] overflow-hidden relative shadow-2xl group border border-gray-700">
+                <img src="images/p3.webp" alt="Client Sarah Johnson" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-transparent to-transparent"></div>
+                <!-- Name Overlay -->
+                <div class="absolute bottom-8 left-8">
+                    <h3 class="text-3xl font-bold text-white">Sarah Johnson</h3>
+                    <p class="text-brand font-medium">Founder, Salem Artisan Roasters</p>
+                </div>
+            </div>
+
+            <!-- Quote Area -->
+            <div class="w-full lg:w-6/12 relative">
+                 <div class="inline-block border border-gray-600 bg-gray-800/80 rounded-full px-4 py-2 text-sm text-brand mb-6 font-medium">
+                    Customer Stories
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-8">
+                    Trusted by Thousands of Salem Businesses.
+                </h2>
+                <p class="text-gray-400 mb-10 max-w-lg leading-relaxed">
+                    We take pride in fostering enduring community partnerships. Hear what our business clients have to say about their journey with te stackly.
+                </p>
+
+                <!-- Review Card -->
+                <div class="bg-[#24332e] p-8 md:p-10 rounded-3xl relative border border-gray-700 shadow-xl">
+                    <div class="flex text-brand text-xl mb-4 gap-1">
+                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-4">"Transformed how I operate my business finances."</h4>
+                    <p class="text-gray-300 leading-relaxed text-sm">
+                        "Switching to te stackly was the best financial decision we made. The local Salem advisory team guided us through our expansion loan seamlessly, and their mobile app cuts our payroll processing time in half."
+                    </p>
+                    <div class="absolute bottom-6 right-6 w-10 h-10 bg-brand rounded-full flex items-center justify-center text-dark shadow-md">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- News & Blog Section -->
+    <section class="max-w-[1400px] mx-auto px-4 md:px-8 py-20 border-t border-gray-100">
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+            
+            <!-- Left Header -->
+            <div class="w-full lg:w-1/3">
+                <div class="inline-block border border-gray-200 text-gray-700 rounded-full px-4 py-2 text-sm mb-4 bg-surface font-medium">
+                    Latest Insights
+                </div>
+                <h2 class="text-4xl font-bold text-dark leading-tight mb-6">
+                    Stay Ahead With Our Financial News.
+                </h2>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    Discover practical advice on wealth building, personal budgeting, cyber protection, and the future of Salem commerce.
+                </p>
+                <div class="mt-4">
+                    <a href="blog.html" class="bg-dark text-white px-8 py-3.5 rounded-full font-bold hover:bg-brand hover:text-dark transition inline-flex items-center gap-2 shadow-sm">
+                        Explore All Articles <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Featured Article Card -->
+            <div class="w-full lg:w-2/3 bg-surface rounded-[2.5rem] p-6 sm:p-8 flex flex-col md:flex-row gap-8 items-center border border-gray-200 hover:border-brand hover:shadow-xl transition-all duration-300">
+                <div class="w-full md:w-1/2 h-64 sm:h-72 rounded-2xl overflow-hidden relative shadow-sm">
+                    <img src="images/pexels-mikhail-nilov-6931341.webp" alt="Digital Banking Future" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="flex items-center gap-2 text-dark font-bold text-xs uppercase tracking-wider mb-4 bg-brand px-3 py-1 rounded-full w-max">
+                        Digital Banking 2026
+                    </div>
+                    <h3 class="text-2xl font-bold text-dark mb-4 leading-tight">
+                        The Future of Digital Banking: Trends Shaping 2026 and Beyond
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-6 line-clamp-3">Explore how AI-driven insights, multi-layered biometric vaults, and instant payment rails are transforming personal wealth management.</p>
+                    <a href="blog.html" class="font-bold text-dark hover:text-brand-dark flex items-center gap-2">
+                        Read Full Article <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bottom CTA Banner -->
+    <section class="relative bg-brand py-20 overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-cover bg-center mix-blend-multiply" style="background-image: url('images/pexels-kampus-6248973.webp');"></div>
+        
+        <div class="relative z-10 max-w-[1400px] mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-bold text-dark mb-8 tracking-tight">Start Your Financial Journey Today.</h2>
+            <p class="text-dark/90 text-lg max-w-2xl mx-auto mb-10 font-medium">Join over 120,000 Salem residents and businesses who trust te stackly for smarter, faster, and more transparent banking.</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="contact.html" class="bg-dark text-white px-8 py-4 rounded-full font-bold hover:bg-white hover:text-dark transition shadow-xl">Create an Account</a>
+                <a href="services.html" class="bg-white text-dark px-8 py-4 rounded-full font-bold hover:bg-dark hover:text-white transition shadow-xl border border-dark/10">Explore Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Bar Above Footer -->
+    <div class="bg-dark text-white py-6 overflow-hidden border-b border-gray-800">
+        <div class="animate-marquee flex w-max">
+            <!-- Set 1 -->
+            <div class="flex items-center gap-8 px-4">
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 24/7 Support</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Fast Response</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Secure Messaging</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Local Salem Advisors</span>
+            </div>
+            <!-- Set 2 -->
+            <div class="flex items-center gap-8 px-4">
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> 24/7 Support</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Fast Response</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Secure Messaging</span>
+                <span class="text-2xl font-bold flex items-center gap-4"><i class="fa-solid fa-star-of-life text-brand text-lg"></i> Local Salem Advisors</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-surface pt-20 pb-10 border-t border-gray-200 mt-0">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8">
+            
+            <div class="flex flex-col lg:flex-row justify-between items-start border-b border-gray-200 pb-12 mb-12 gap-12">
+                <div class="lg:w-1/3">
+                    <a href="index.html" class="inline-flex items-center gap-2 group mb-4" aria-label="te stackly homepage">
+                        <div class="bg-dark px-4 py-2 rounded-2xl flex items-center border border-brand/40 shadow-sm group-hover:border-brand transition duration-300">
+                            <img src="images/stackly logo.webp" alt="te stackly" class="h-7 sm:h-8 w-auto object-contain">
+                        </div>
+                    </a>
+                    <p class="text-gray-500 mb-6 max-w-sm">
+                        Your Journey to Financial Success Starts Here. Located in Salem, committed to serving our community.
+                    </p>
+                </div>
+                
+                <div class="lg:w-1/2 w-full">
+                    <h3 class="text-2xl font-bold text-dark mb-4">Subscribe To Newsletter!</h3>
+                    <form class="flex flex-col sm:flex-row bg-white rounded-2xl sm:rounded-full p-2 border border-gray-200 focus-within:border-brand shadow-sm max-w-lg gap-2 sm:gap-0" novalidate onsubmit="event.preventDefault(); (window.stacklyToast || window.showToast)('Thank you for subscribing to our newsletter!', 'success');">
+                        <input type="email" placeholder="Enter your email to subscribe" required class="w-full px-4 sm:px-6 py-3 bg-transparent outline-none text-gray-700 font-medium min-w-0">
+                        <button type="submit" class="bg-brand text-dark px-8 py-3.5 sm:py-3 rounded-xl sm:rounded-full font-bold hover:bg-dark hover:text-white transition whitespace-nowrap shadow-sm w-full sm:w-auto shrink-0">
+                            Subscribe Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <div>
+                    <h4 class="font-bold text-dark text-lg mb-6">Menu</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="index.html" class="text-brand font-medium">Home</a></li>
+                        <li><a href="services.html" class="hover:text-brand transition">Services</a></li>
+                        <li><a href="about.html" class="hover:text-brand transition">About Us</a></li>
+                        <li><a href="blog.html" class="hover:text-brand transition">Blog</a></li>
+                        <li><a href="contact.html" class="hover:text-brand transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-transparent text-lg mb-6 select-none">.</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="services.html" class="hover:text-brand transition">Personal Accounts</a></li>
+                        <li><a href="services.html" class="hover:text-brand transition">Business Loans</a></li>
+                        <li><a href="blog.html" class="hover:text-brand transition">Financial Articles</a></li>
+                        <li><a href="contact.html" class="hover:text-brand transition">Customer Support</a></li>
+                        <li><a href="signup.html" class="hover:text-brand transition">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-dark text-lg mb-6">Quick Links</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="404.html" class="hover:text-brand transition">404 Not Found</a></li>
+                        <li><a href="user-dashboard.html" class="hover:text-brand transition">Client Portal</a></li>
+                        <li><a href="admin-dashboard.html" class="hover:text-brand transition">Admin Console</a></li>
+                        <li><a href="login.html" class="hover:text-brand transition">Secure Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 lg:col-span-1 lg:col-start-5">
+                    <h4 class="font-bold text-dark text-lg mb-6">Follow Us</h4>
+                    <ul class="space-y-4 text-gray-500">
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-facebook w-5 text-center"></i> Facebook</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-linkedin w-5 text-center"></i> LinkedIn</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-instagram w-5 text-center"></i> Instagram</a></li>
+                        <li><a href="404.html" class="flex items-center gap-3 hover:text-brand transition"><i class="fa-brands fa-youtube w-5 text-center"></i> YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4">
+                <p>&copy; Copyright - te stackly | Designed for Salem</p>
+                <p class="text-xs text-gray-400">FDIC Insured &bull; 256-bit Bank-Grade Encryption</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileBtn && mobileMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Scroll Reveal Animation Logic
+            const revealElements = document.querySelectorAll('.reveal');
+            if (revealElements.length > 0) {
+                const revealOptions = {
+                    threshold: 0.1,
+                    rootMargin: "0px 0px -50px 0px"
+                };
+
+                const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, revealOptions);
+
+                revealElements.forEach(el => {
+                    revealOnScroll.observe(el);
+                });
+            }
+        });
+    </script>
+    <script src="validation.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | te stackly</title>
+    <meta name="description" content="404 Page Not Found">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#d4ff33',
+                        'brand-dark': '#b3d929',
+                        dark: '#1a1a1a',
+                        surface: '#f9f9f9',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dot-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.06) 2px, transparent 2px);
+            background-size: 28px 28px;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-900 bg-surface antialiased h-full flex items-center justify-center p-6 dot-pattern">
+
+    <main class="max-w-lg w-full text-center bg-white p-8 sm:p-12 rounded-[2.5rem] border border-gray-200 shadow-2xl relative overflow-hidden">
+        <!-- Accent decorative glow -->
+        <div class="absolute -top-24 -left-24 w-48 h-48 bg-brand/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-brand/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Big 404 Display -->
+        <div class="relative z-10 space-y-4">
+            <div class="inline-flex items-center justify-center">
+                <span class="text-7xl sm:text-9xl font-black tracking-tight text-dark select-none">
+                    4<span class="text-brand inline-block px-1 drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]">0</span>4
+                </span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-bold text-dark">
+                Page Not Found
+            </h1>
+
+            <p class="text-gray-500 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
+                The page you are looking for doesn't exist or has been moved.
+            </p>
+
+            <!-- Only Back and Back to Home buttons -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button onclick="history.back()" class="w-full sm:w-auto px-6 py-3.5 bg-white border border-gray-300 text-dark rounded-2xl font-bold hover:border-dark hover:bg-gray-50 transition duration-200 flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-arrow-left text-xs"></i> Back
+                </button>
+                <a href="index.html" class="w-full sm:w-auto px-6 py-3.5 bg-dark text-white rounded-2xl font-bold hover:bg-brand hover:text-dark transition duration-200 flex items-center justify-center gap-2 shadow-md">
+                    <i class="fa-solid fa-house text-xs"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

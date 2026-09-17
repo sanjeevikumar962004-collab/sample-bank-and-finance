@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Banking Portal - te stackly</title>
+    <meta name="description" content="Manage your accounts, international wires, high-yield savings, and private wealth on the te stackly banking portal.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#d4ff33', // Vibrant lime green
+                        'brand-dark': '#b3d929',
+                        dark: '#1a1a1a',
+                        'dark-card': '#222222',
+                        surface: '#f8fafc',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .active-tab {
+            background-color: #d4ff33 !important;
+            color: #1a1a1a !important;
+            font-weight: 700;
+        }
+        .active-tab i {
+            color: #1a1a1a !important;
+        }
+        .card-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+        /* Sidebar transitions */
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-surface selection:bg-brand selection:text-dark antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Mobile / Tablet Drawer Backdrop Overlay -->
+    <div id="sidebarBackdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-dark/70 backdrop-blur-sm z-40 hidden transition-opacity duration-300 opacity-0 lg:hidden" aria-hidden="true"></div>
+
+    <!-- SIDEBAR: Responsive Left Navigation (Fixed Desktop Slidebar & Slide-over Mobile/Tablet Drawer) -->
+    <aside id="dashboardSidebar" class="sidebar-transition fixed top-0 bottom-0 left-0 z-50 w-72 lg:w-64 xl:w-72 bg-dark text-white flex flex-col justify-between border-r border-gray-800 shadow-2xl -translate-x-full lg:translate-x-0">
+        
+        <!-- Sidebar Top Area: Brand & Close Button (Mobile) -->
+        <div>
+            <div class="p-5 sm:p-6 border-b border-gray-800/80 flex items-center justify-between">
+                <a href="javascript:void(0)" onclick="switchTab('overview')" class="flex items-center gap-3 group" title="Dashboard Overview">
+                    <div class="bg-white/5 px-3 py-1.5 rounded-xl border border-brand/30 flex items-center group-hover:border-brand transition">
+                        <img src="images/stackly logo.webp" alt="te stackly" class="h-6 w-auto object-contain">
+                    </div>
+                </a>
+
+                <!-- Mobile Close Toggle Button -->
+                <button onclick="toggleMobileSidebar(false)" class="lg:hidden text-gray-400 hover:text-white p-2 rounded-xl hover:bg-white/10 transition" aria-label="Close navigation menu">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Quick Action Send Money Shortcut in Sidebar -->
+            <div class="px-4 pt-4 pb-2">
+                <button onclick="openTransferModal(); toggleMobileSidebar(false);" class="w-full bg-brand text-dark hover:bg-brand-dark py-3 px-4 rounded-2xl font-bold text-sm transition flex items-center justify-center gap-2.5 shadow-lg shadow-brand/10">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                    <span class="sidebar-text">Quick Transfer</span>
+                </button>
+            </div>
+
+            <!-- Navigation Links / Tabs List -->
+            <nav class="p-3 space-y-1.5" aria-label="Dashboard Tabs">
+                <div class="px-3 pt-2 pb-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider sidebar-text">
+                    Banking Menu
+                </div>
+
+                <button onclick="switchTab('overview')" id="tab-btn-overview" class="tab-btn active-tab w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-chart-pie text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text">Overview</span>
+                </button>
+
+                <button onclick="switchTab('transfers')" id="tab-btn-transfers" class="tab-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-money-bill-transfer text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text">Transfers &amp; Pay</span>
+                </button>
+
+                <button onclick="switchTab('cards')" id="tab-btn-cards" class="tab-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-credit-card text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text">Cards &amp; Limits</span>
+                </button>
+
+                <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-semibold transition text-left text-gray-300 hover:bg-white/10 hover:text-white group">
+                    <i class="fa-solid fa-user-gear text-base w-5 text-center text-gray-400 group-hover:text-brand transition"></i>
+                    <span class="sidebar-text">Profile &amp; Settings</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Sidebar Bottom Area: User Profile Card & Sign Out -->
+        <div class="p-4 border-t border-gray-800/80 bg-black/20">
+            <div class="flex items-center justify-between p-2 rounded-2xl bg-white/5 border border-white/10">
+                <div class="flex items-center gap-3 min-w-0">
+                    <img src="images/p2.webp" alt="Alex Morgan" class="w-10 h-10 rounded-full object-cover border-2 border-brand shadow-md flex-shrink-0">
+                    <div class="min-w-0 sidebar-text">
+                        <div class="text-sm font-bold text-white truncate user-display-name">Alex Morgan</div>
+                        <div class="text-[11px] text-gray-400 truncate flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse"></span>
+                            <span>Personal Premier</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="login.html" onclick="localStorage.removeItem('stackly_user')" class="text-gray-400 hover:text-red-400 transition p-2 rounded-xl hover:bg-white/10 flex-shrink-0" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN APP SHELL: Adjusts dynamically with desktop sidebar -->
+    <div id="mainContentWrapper" class="flex-1 lg:pl-64 xl:pl-72 flex flex-col min-h-screen transition-all duration-300">
+        
+        <!-- Sticky Top Bar for Mobile, Tablet & Desktop Controls -->
+        <header class="bg-white/95 backdrop-blur-md border-b border-gray-200 sticky top-0 z-30">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+                
+                <!-- Left: Mobile Menu Toggle Button & Desktop Slidebar Collapse Button -->
+                <div class="flex items-center gap-3">
+                    <!-- Mobile Hamburger Button -->
+                    <button onclick="toggleMobileSidebar(true)" class="lg:hidden p-2.5 rounded-2xl bg-surface border border-gray-200 text-dark hover:bg-gray-100 hover:border-dark transition duration-200 focus:outline-none focus:ring-2 focus:ring-brand" aria-label="Open mobile navigation drawer">
+                        <i class="fa-solid fa-bars-staggered text-lg"></i>
+                    </button>
+
+                    <!-- Desktop Sidebar Collapse Toggle Button -->
+                    <button id="desktopSidebarToggle" onclick="toggleDesktopSidebarCollapse()" class="hidden lg:flex items-center gap-2 p-2.5 rounded-2xl bg-surface border border-gray-200 text-gray-600 hover:text-dark hover:border-dark transition duration-200" title="Collapse / Expand Sidebar">
+                        <i id="desktopSidebarToggleIcon" class="fa-solid fa-bars text-sm"></i>
+                    </button>
+
+                    <!-- Page Context Breadcrumb / Live Status -->
+                    <div class="hidden sm:flex items-center gap-2 text-xs font-semibold text-gray-500">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            FDIC Insured Vault Active
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right: Quick Header Tools & User Profile Pill -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <!-- Global Search Simulated -->
+                    <div class="relative hidden md:block">
+                        <i onclick="stacklyToast('Search ledger active', 'info')" class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs cursor-pointer hover:text-dark"></i>
+                        <input type="text" onkeydown="if(event.key==='Enter') stacklyToast('Filtered records for: ' + this.value, 'info')" placeholder="Search transactions, cards..." class="pl-9 pr-4 py-2 bg-surface border border-gray-200 rounded-xl text-xs text-dark placeholder-gray-400 focus:outline-none focus:border-dark w-48 lg:w-64 transition">
+                    </div>
+
+                    <!-- Notifications Button -->
+                    <button onclick="stacklyToast('All banking notifications up to date.', 'info')" class="w-10 h-10 rounded-2xl bg-surface border border-gray-200 flex items-center justify-center text-gray-600 hover:text-dark hover:border-dark transition relative" aria-label="Notifications">
+                        <i class="fa-regular fa-bell text-sm"></i>
+                        <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-brand rounded-full ring-2 ring-white"></span>
+                    </button>
+
+                    <!-- Desktop User Profile Pill -->
+                    <div class="flex items-center gap-3 pl-2 sm:pl-4 border-l border-gray-200">
+                        <img src="images/p2.webp" alt="Alex Morgan" class="w-9 h-9 rounded-full object-cover border border-brand shadow-sm flex-shrink-0">
+                        <div class="hidden sm:block text-left">
+                            <div class="text-xs font-bold text-dark leading-tight user-display-name">Alex Morgan</div>
+                            <div class="text-[10px] text-gray-400 font-medium">Account #****4902</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard View Container -->
+        <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            
+            <!-- Welcome Banner & Quick Action Buttons -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm">
+                <div class="space-y-1">
+                    <div class="inline-flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Live Account Ledger
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-black text-dark">
+                        Welcome, <span class="user-display-name">Alex Morgan</span>
+                    </h1>
+                    <p class="text-gray-500 text-sm">Here is your daily financial performance &amp; transaction summary.</p>
+                </div>
+
+                <!-- Quick Action Triggers -->
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full md:w-auto">
+                    <button onclick="openTransferModal()" class="flex-1 sm:flex-none px-6 py-3 bg-dark text-white rounded-2xl font-bold hover:bg-brand hover:text-dark transition duration-300 shadow-sm flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-paper-plane text-xs"></i> Send Money
+                    </button>
+                    <button onclick="stacklyToast('Deposit check feature simulated. Account credited +$1,000.00', 'success')" class="flex-1 sm:flex-none px-6 py-3 bg-white border border-gray-200 text-dark rounded-2xl font-bold hover:border-dark hover:bg-gray-50 transition duration-300 shadow-sm flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-plus text-xs"></i> Quick Deposit
+                    </button>
+                    <button onclick="switchTab('settings')" class="px-4 py-3 bg-surface border border-gray-200 text-dark rounded-2xl font-bold hover:border-dark transition text-sm" title="Account Settings">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile & Tablet Secondary Tab Bar (Allows fast tab switching right on the page if preferred) -->
+            <div class="lg:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
+                <button onclick="switchTab('overview')" id="mobile-tab-overview" class="mobile-tab-btn active-tab px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 bg-dark text-brand">
+                    <i class="fa-solid fa-chart-pie"></i> Overview
+                </button>
+                <button onclick="switchTab('transfers')" id="mobile-tab-transfers" class="mobile-tab-btn px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 text-gray-600 bg-white border border-gray-200 hover:bg-surface">
+                    <i class="fa-solid fa-money-bill-transfer"></i> Transfers &amp; Pay
+                </button>
+                <button onclick="switchTab('cards')" id="mobile-tab-cards" class="mobile-tab-btn px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 text-gray-600 bg-white border border-gray-200 hover:bg-surface">
+                    <i class="fa-solid fa-credit-card"></i> Cards &amp; Limits
+                </button>
+                <button onclick="switchTab('settings')" id="mobile-tab-settings" class="mobile-tab-btn px-4 py-2 rounded-xl font-bold text-xs whitespace-nowrap transition flex items-center gap-2 text-gray-600 bg-white border border-gray-200 hover:bg-surface">
+                    <i class="fa-solid fa-user-gear"></i> Profile &amp; Settings
+                </button>
+            </div>
+
+            <!-- TAB 1: OVERVIEW -->
+            <div id="tab-overview" class="tab-content space-y-8">
+                <!-- Financial Metric Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
+                    <!-- Total Balance -->
+                    <div class="bg-dark text-white p-6 rounded-3xl relative overflow-hidden shadow-lg border border-gray-800">
+                        <div class="absolute -right-8 -top-8 w-32 h-32 bg-brand/20 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="flex justify-between items-center text-xs font-bold text-gray-400 uppercase mb-3">
+                            <span>Total Net Worth</span>
+                            <span class="text-brand text-xs"><i class="fa-solid fa-shield-halved"></i> Verified</span>
+                        </div>
+                        <div class="text-3xl font-black tracking-tight text-white mb-2">$128,450.00</div>
+                        <div class="flex items-center gap-2 text-xs text-brand font-semibold">
+                            <i class="fa-solid fa-arrow-trend-up"></i> +14.8% APY this fiscal year
+                        </div>
+                    </div>
+
+                    <!-- High-Yield Savings -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-center text-xs font-bold text-gray-400 uppercase mb-3">
+                            <span>High-Yield Savings</span>
+                            <span class="text-green-600 bg-green-50 px-2 py-0.5 rounded-md font-bold">4.85% APY</span>
+                        </div>
+                        <div class="text-2xl font-black text-dark mb-2">$64,300.00</div>
+                        <div class="text-xs text-gray-500">Accrued Interest: +$248.50 this month</div>
+                    </div>
+
+                    <!-- Checking Account -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-center text-xs font-bold text-gray-400 uppercase mb-3">
+                            <span>Premier Checking</span>
+                            <span class="text-gray-400 text-xs font-mono">#***4902</span>
+                        </div>
+                        <div class="text-2xl font-black text-dark mb-2">$32,150.00</div>
+                        <div class="text-xs text-gray-500">Monthly Expenses: $4,120.00</div>
+                    </div>
+
+                    <!-- Investment Allocation -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-center text-xs font-bold text-gray-400 uppercase mb-3">
+                            <span>Investments &amp; ETFs</span>
+                            <span class="text-dark bg-brand/30 px-2 py-0.5 rounded-md font-bold">+8.2%</span>
+                        </div>
+                        <div class="text-2xl font-black text-dark mb-2">$32,000.00</div>
+                        <div class="text-xs text-gray-500">Asset Allocation: 60% Tech / 40% Bonds</div>
+                    </div>
+                </div>
+
+                <!-- Split Section: Recent Transactions & Card Visualization -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+                    
+                    <!-- Left: Recent Transactions Table -->
+                    <div class="lg:col-span-8 bg-white p-5 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-dark">Recent Transactions</h2>
+                                <p class="text-xs text-gray-400">All cleared debits, credits, and wire receipts.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="filterTransactions('all')" class="tx-filter px-3 py-1.5 text-xs font-bold bg-dark text-white rounded-lg">All</button>
+                                <button onclick="filterTransactions('inflow')" class="tx-filter px-3 py-1.5 text-xs font-bold bg-surface hover:bg-gray-100 text-gray-600 rounded-lg">Inflow</button>
+                                <button onclick="filterTransactions('outflow')" class="tx-filter px-3 py-1.5 text-xs font-bold bg-surface hover:bg-gray-100 text-gray-600 rounded-lg">Outflow</button>
+                            </div>
+                        </div>
+
+                        <!-- Transactions List -->
+                        <div class="space-y-3">
+                            <!-- Item 1 -->
+                            <div class="tx-item inflow flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-surface hover:bg-gray-100 transition gap-3">
+                                <div class="flex items-center gap-3.5 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-green-100 text-green-700 flex items-center justify-center font-bold flex-shrink-0">
+                                        <i class="fa-solid fa-arrow-down-long"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-sm font-bold text-dark truncate">Salary Direct Deposit</div>
+                                        <div class="text-xs text-gray-400 truncate">Global Tech Corp &bull; Sep 16, 2026</div>
+                                    </div>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <div class="text-sm font-bold text-green-600">+$6,450.00</div>
+                                    <span class="text-[10px] bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-bold uppercase">Completed</span>
+                                </div>
+                            </div>
+
+                            <!-- Item 2 -->
+                            <div class="tx-item outflow flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-surface hover:bg-gray-100 transition gap-3">
+                                <div class="flex items-center gap-3.5 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-gray-200 text-dark flex items-center justify-center font-bold flex-shrink-0">
+                                        <i class="fa-solid fa-arrow-up-long"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-sm font-bold text-dark truncate">Stripe Capital Wire</div>
+                                        <div class="text-xs text-gray-400 truncate">Business Services &bull; Sep 14, 2026</div>
+                                    </div>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <div class="text-sm font-bold text-dark">-$1,250.00</div>
+                                    <span class="text-[10px] bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full font-bold uppercase">Completed</span>
+                                </div>
+                            </div>
+
+                            <!-- Item 3 -->
+                            <div class="tx-item inflow flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-surface hover:bg-gray-100 transition gap-3">
+                                <div class="flex items-center gap-3.5 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-brand/30 text-dark flex items-center justify-center font-bold flex-shrink-0">
+                                        <i class="fa-solid fa-percent"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-sm font-bold text-dark truncate">Monthly Compound Yield</div>
+                                        <div class="text-xs text-gray-400 truncate">te stackly High-Yield &bull; Sep 01, 2026</div>
+                                    </div>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <div class="text-sm font-bold text-green-600">+$248.50</div>
+                                    <span class="text-[10px] bg-brand/30 text-dark px-2 py-0.5 rounded-full font-bold uppercase">Settled</span>
+                                </div>
+                            </div>
+
+                            <!-- Item 4 -->
+                            <div class="tx-item outflow flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-surface hover:bg-gray-100 transition gap-3">
+                                <div class="flex items-center gap-3.5 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-gray-200 text-dark flex items-center justify-center font-bold flex-shrink-0">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-sm font-bold text-dark truncate">Apple Store Online</div>
+                                        <div class="text-xs text-gray-400 truncate">Stackly Black Card (*4902) &bull; Aug 29</div>
+                                    </div>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <div class="text-sm font-bold text-dark">-$899.00</div>
+                                    <span class="text-[10px] bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full font-bold uppercase">Completed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Card Showcase -->
+                    <div class="lg:col-span-4 bg-white p-5 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg font-bold text-dark">Active Card</h2>
+                            <span class="text-xs font-bold text-brand bg-dark px-2.5 py-1 rounded-full">Platinum Black</span>
+                        </div>
+
+                        <!-- 3D Look Card -->
+                        <div class="card-gradient text-white p-6 rounded-3xl shadow-xl space-y-6 relative overflow-hidden border border-gray-700 max-w-sm mx-auto lg:max-w-none">
+                            <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-brand/20 rounded-full blur-2xl"></div>
+                            <div class="flex justify-between items-start">
+                                <div class="text-xs font-bold text-brand uppercase tracking-widest">te stackly</div>
+                                <i class="fa-solid fa-wifi text-gray-400 text-sm"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="text-[10px] text-gray-400 uppercase">Card Number</div>
+                                <div class="font-mono text-base sm:text-lg font-bold tracking-widest">4592 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4902</div>
+                            </div>
+                            <div class="flex justify-between items-end text-xs">
+                                <div>
+                                    <div class="text-[10px] text-gray-400 uppercase">Card Holder</div>
+                                    <div class="font-bold user-display-name">Alex Morgan</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] text-gray-400 uppercase">Expires</div>
+                                    <div class="font-bold">09/29</div>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-brand/80 text-dark flex items-center justify-center font-black">
+                                    <i class="fa-brands fa-cc-mastercard text-base"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Quick Controls -->
+                        <div class="space-y-3 pt-2">
+                            <div class="flex items-center justify-between p-3 rounded-2xl bg-surface border border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-snowflake text-blue-500"></i>
+                                    <span class="text-xs font-bold text-dark">Freeze / Lock Card</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" onchange="stacklyToast(this.checked ? 'Card locked successfully' : 'Card unlocked', 'info')" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-dark"></div>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 rounded-2xl bg-surface border border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-sliders text-dark"></i>
+                                    <span class="text-xs font-bold text-dark">Daily Limit: $10,000</span>
+                                </div>
+                                <button onclick="stacklyToast('Card limits updated', 'success')" class="text-xs text-brand-dark font-bold hover:underline">Adjust</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TAB 2: TRANSFERS & PAY -->
+            <div id="tab-transfers" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-10 rounded-3xl border border-gray-100 shadow-sm max-w-2xl mx-auto">
+                    <div class="mb-6">
+                        <div class="w-12 h-12 bg-brand/20 text-dark rounded-2xl flex items-center justify-center text-xl mb-3">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-dark">Wire &amp; Domestic Transfer</h2>
+                        <p class="text-gray-500 text-sm">Send funds securely with zero commission fees.</p>
+                    </div>
+
+                    <!-- Transfer Form -->
+                    <form id="transferForm" class="space-y-4" novalidate>
+                        <div class="form-group">
+                            <label for="recipientName" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Recipient Full Name</label>
+                            <input type="text" id="recipientName" name="recipientName" required placeholder="e.g. Jordan Smith" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark placeholder-gray-400 focus:outline-none focus:border-dark transition">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label for="recipientAccount" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Account Number</label>
+                                <input type="text" id="recipientAccount" name="recipientAccount" required placeholder="8-16 digit account #" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark placeholder-gray-400 focus:outline-none focus:border-dark transition">
+                            </div>
+                            <div class="form-group">
+                                <label for="routingNumber" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Routing Number</label>
+                                <input type="text" id="routingNumber" name="routingNumber" required placeholder="9-digit routing #" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark placeholder-gray-400 focus:outline-none focus:border-dark transition">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label for="transferAmount" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Amount ($ USD)</label>
+                                <input type="number" id="transferAmount" name="transferAmount" required min="1" max="50000" placeholder="0.00" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark placeholder-gray-400 focus:outline-none focus:border-dark transition">
+                            </div>
+                            <div class="form-group">
+                                <label for="securityPin" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Security PIN (4 digits)</label>
+                                <input type="password" id="securityPin" name="securityPin" required maxlength="4" placeholder="****" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark placeholder-gray-400 focus:outline-none focus:border-dark transition">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-dark text-white hover:bg-brand hover:text-dark py-3.5 px-6 rounded-xl font-bold transition duration-300 shadow-md">
+                            Authorize Wire Transfer
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TAB 3: CARDS & LIMITS -->
+            <div id="tab-cards" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-4">
+                        <h3 class="font-bold text-lg text-dark">Stackly Virtual Debit</h3>
+                        <div class="card-gradient text-white p-6 rounded-3xl shadow-md border border-gray-800 space-y-4">
+                            <div class="text-xs text-brand font-bold">VIRTUAL INSTANT</div>
+                            <div class="text-base font-mono font-bold tracking-wider">5120 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 9012</div>
+                            <div class="flex justify-between text-xs">
+                                <span class="user-display-name">Alex Morgan</span>
+                                <span>CVV: 842</span>
+                            </div>
+                        </div>
+                        <button onclick="stacklyToast('Card details copied to clipboard', 'info')" class="w-full py-2.5 border border-gray-200 rounded-xl text-xs font-bold hover:border-dark transition">Copy Card Numbers</button>
+                    </div>
+
+                    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-4">
+                        <h3 class="font-bold text-lg text-dark">Order Metal Card</h3>
+                        <p class="text-xs text-gray-500">Upgrade to laser-etched 18g Stainless Steel te stackly Black Card with lounge access &amp; 2% cashback.</p>
+                        <ul class="text-xs space-y-2 text-gray-600">
+                            <li><i class="fa-solid fa-check text-green-500 mr-1.5"></i> Zero ATM withdrawal fees worldwide</li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-1.5"></i> Comprehensive travel insurance</li>
+                        </ul>
+                        <button onclick="stacklyToast('Card upgrade request dispatched to concierge!', 'success')" class="w-full py-3 bg-dark text-white rounded-xl text-xs font-bold hover:bg-brand hover:text-dark transition">Request Metal Card</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: PROFILE & SETTINGS -->
+            <div id="tab-settings" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 sm:p-10 rounded-3xl border border-gray-100 shadow-sm max-w-2xl mx-auto">
+                    <div class="mb-6">
+                        <div class="w-12 h-12 bg-brand/20 text-dark rounded-2xl flex items-center justify-center text-xl mb-3">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-dark">Profile &amp; Security Constraints</h2>
+                        <p class="text-gray-500 text-sm">Update your banking credentials and contact information.</p>
+                    </div>
+
+                    <form id="profileSettingsForm" class="space-y-4" novalidate>
+                        <div class="form-group">
+                            <label for="profileName" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Full Name</label>
+                            <input type="text" id="profileName" name="fullname" required value="Alex Morgan" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark focus:outline-none focus:border-dark transition">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profileEmail" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Email Address</label>
+                            <input type="email" id="profileEmail" name="email" required value="alex.morgan@testackly.com" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark focus:outline-none focus:border-dark transition">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profilePhone" class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Phone Number</label>
+                            <input type="tel" id="profilePhone" name="phone" required value="(555) 019-2834" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-dark focus:outline-none focus:border-dark transition">
+                        </div>
+
+                        <div class="p-4 bg-surface rounded-2xl border border-gray-100 flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-bold text-dark">Two-Factor Authentication (2FA)</div>
+                                <div class="text-[11px] text-gray-400">Receive SMS verification code for all wires</div>
+                            </div>
+                            <span class="text-xs font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">Enabled</span>
+                        </div>
+
+                        <button type="submit" class="w-full mt-4 bg-dark text-white hover:bg-brand hover:text-dark py-3.5 px-6 rounded-xl font-bold transition duration-300 shadow-md">
+                            Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-100 py-6 px-4 sm:px-8 text-center text-xs text-gray-500 mt-auto">
+            <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p>&copy; Copyright - te stackly Banking Services | FDIC Insured</p>
+                <div class="text-xs text-gray-400 font-medium">
+                    <span>Secure Encrypted Session</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Transfer Modal Dialog -->
+    <div id="transferModal" class="fixed inset-0 bg-dark/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-gray-100 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeTransferModal()" class="absolute top-6 right-6 text-gray-400 hover:text-dark text-2xl w-8 h-8 rounded-full hover:bg-surface flex items-center justify-center transition" aria-label="Close transfer modal">&times;</button>
+            <h3 id="modalTitle" class="text-xl font-black text-dark mb-1">Send Instant Money</h3>
+            <p class="text-xs text-gray-500 mb-6">Zero fees on all domestic and global transfers.</p>
+            
+            <form id="transferFormModal" onsubmit="event.preventDefault(); window.stacklyToast('Transfer completed successfully!', 'success'); closeTransferModal();" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Recipient Name</label>
+                    <input type="text" required placeholder="Full Name" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-dark transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Amount ($ USD)</label>
+                    <input type="number" min="1" required placeholder="500.00" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-dark transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Note / Description (Optional)</label>
+                    <input type="text" placeholder="e.g. Invoice settlement" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-dark transition">
+                </div>
+                <button type="submit" class="w-full bg-dark text-white hover:bg-brand hover:text-dark py-3.5 rounded-xl font-bold transition shadow-md">Confirm Transfer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation & UI Control Scripts -->
+    <script>
+        // Tab Switching Handler
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Remove active classes from all desktop and mobile buttons
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active-tab', 'bg-brand', 'text-dark');
+                el.classList.add('text-gray-300');
+            });
+            document.querySelectorAll('.mobile-tab-btn').forEach(el => {
+                el.classList.remove('active-tab', 'bg-dark', 'text-brand');
+                el.classList.add('text-gray-600', 'bg-white');
+            });
+
+            // Activate Target Tab Content
+            const content = document.getElementById(`tab-${tabId}`);
+            if (content) content.classList.remove('hidden');
+
+            // Activate Desktop Nav Tab Button
+            const desktopBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (desktopBtn) {
+                desktopBtn.classList.add('active-tab');
+                desktopBtn.classList.remove('text-gray-300');
+            }
+
+            // Activate Mobile Secondary Tab Button
+            const mobileBtn = document.getElementById(`mobile-tab-${tabId}`);
+            if (mobileBtn) {
+                mobileBtn.classList.add('active-tab', 'bg-dark', 'text-brand');
+                mobileBtn.classList.remove('text-gray-600', 'bg-white');
+            }
+
+            // Automatically close mobile sidebar if opened
+            toggleMobileSidebar(false);
+
+            // Scroll smoothly to top of main content on mobile
+            if (window.innerWidth < 1024) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Mobile Sidebar Drawer Toggle
+        function toggleMobileSidebar(open) {
+            const sidebar = document.getElementById('dashboardSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (!sidebar || !backdrop) return;
+
+            if (open) {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+                setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+                document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('opacity-0');
+                setTimeout(() => backdrop.classList.add('hidden'), 300);
+                document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
+            }
+        }
+
+        // Desktop Sidebar Collapse / Expand Toggle
+        let isDesktopSidebarCollapsed = false;
+        function toggleDesktopSidebarCollapse() {
+            if (window.innerWidth < 1024) {
+                toggleMobileSidebar(true);
+                return;
+            }
+
+            const sidebar = document.getElementById('dashboardSidebar');
+            const wrapper = document.getElementById('mainContentWrapper');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+            const icon = document.getElementById('desktopSidebarToggleIcon');
+
+            isDesktopSidebarCollapsed = !isDesktopSidebarCollapsed;
+
+            if (isDesktopSidebarCollapsed) {
+                sidebar.classList.remove('lg:w-64', 'xl:w-72');
+                sidebar.classList.add('lg:w-20', 'xl:w-20');
+                wrapper.classList.remove('lg:pl-64', 'xl:pl-72');
+                wrapper.classList.add('lg:pl-20', 'xl:pl-20');
+                sidebarTexts.forEach(el => el.classList.add('hidden'));
+                if (icon) icon.className = 'fa-solid fa-arrow-right-to-bracket text-sm';
+            } else {
+                sidebar.classList.remove('lg:w-20', 'xl:w-20');
+                sidebar.classList.add('lg:w-64', 'xl:w-72');
+                wrapper.classList.remove('lg:pl-20', 'xl:pl-20');
+                wrapper.classList.add('lg:pl-64', 'xl:pl-72');
+                sidebarTexts.forEach(el => el.classList.remove('hidden'));
+                if (icon) icon.className = 'fa-solid fa-bars text-sm';
+            }
+        }
+
+        // Transaction Filtering
+        function filterTransactions(type) {
+            document.querySelectorAll('.tx-filter').forEach(btn => {
+                btn.classList.remove('bg-dark', 'text-white');
+                btn.classList.add('bg-surface', 'text-gray-600');
+            });
+            event.target.classList.add('bg-dark', 'text-white');
+            event.target.classList.remove('bg-surface', 'text-gray-600');
+
+            const items = document.querySelectorAll('.tx-item');
+            items.forEach(item => {
+                if (type === 'all' || item.classList.contains(type)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Transfer Modal Controls
+        function openTransferModal() {
+            const modal = document.getElementById('transferModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        function closeTransferModal() {
+            const modal = document.getElementById('transferModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        // Close on Escape Key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeTransferModal();
+                toggleMobileSidebar(false);
+            }
+        });
+    </script>
+    <script src="validation.js"></script>
+</body>
+</html>
