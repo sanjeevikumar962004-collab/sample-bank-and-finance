@@ -9,7 +9,8 @@
  * 5. Phone, Email, Currency, PIN constraint checkers
  * 6. 1-Click Demo Credentials Filler (User / Admin)
  * 7. Dynamic Toast Notification System
- * 8. LocalStorage profile persistence and dashboard sync
+ * 8. Dynamic Logged-in Credentials Sync & LocalStorage Profile Persistence
+ * 9. Quick Transfer Modal Strict Validation & Ledger Update
  */
 
 (function () {
@@ -121,7 +122,7 @@
     const Patterns = {
         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         phone: /^(\+?1\s?)?(\(?\d{3}\)?[\s.-]?)?\d{3}[\s.-]?\d{4}$/,
-        name: /^[a-zA-Z\s'.]{3,50}$/,
+        name: /^[a-zA-Z\s'.]{2,50}$/,
         pin: /^\d{4}$/,
         accountNumber: /^\d{8,16}$/,
         routingNumber: /^\d{9}$/
@@ -163,7 +164,9 @@
     // Helper: Remove previous error messages
     function clearFieldError(input) {
         input.classList.remove('input-invalid');
-        const parent = input.closest('.form-group, .relative, div') || input.parentElement;
+        const wrapper = input.closest('.form-input-wrapper');
+        const parent = wrapper ? wrapper.parentElement : (input.closest('.form-group, .relative') || input.parentElement);
+        if (!parent) return;
         const existingError = parent.querySelector('.field-error-msg');
         if (existingError) {
             existingError.remove();
@@ -180,8 +183,11 @@
         error.className = 'field-error-msg';
         error.innerHTML = `<i class="fa-solid fa-circle-exclamation text-xs"></i> <span>${message}</span>`;
         
-        const parent = input.closest('.form-group, .relative, div') || input.parentElement;
-        parent.appendChild(error);
+        const wrapper = input.closest('.form-input-wrapper');
+        const parent = wrapper ? wrapper.parentElement : (input.closest('.form-group, .relative') || input.parentElement);
+        if (parent) {
+            parent.appendChild(error);
+        }
     }
 
     // Helper: Mark field as valid
@@ -190,10 +196,23 @@
         input.classList.add('input-valid');
     }
 
+    // Helper: Format human readable name from an email
+    function formatNameFromEmail(email) {
+        if (!email) return 'Valued Client';
+        const lower = email.toLowerCase();
+        if (lower === 'admin@testackly.com') return 'Super Admin';
+        if (lower === 'alex.morgan@testackly.com') return 'Alex Morgan';
+
+        const prefix = email.split('@')[0];
+        const parts = prefix.split(/[\._\-+]/).filter(Boolean);
+        if (parts.length === 0) return 'Valued Client';
+        return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()).join(' ');
+    }
+
     // Password Strength Evaluator
     function evaluatePasswordStrength(password) {
         let score = 0;
-        if (!password) return { score: 0, text: 'Too Short', color: 'bg-gray-200' };
+        if (!password) return { score: 0, text: 'Too Short', color: 'bg-gray-200', width: '10%' };
 
         if (password.length >= 8) score += 1;
         if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
@@ -221,9 +240,19 @@
             form.setAttribute('novalidate', 'true');
         });
 
-        const forms = document.querySelectorAll('form[data-validate], #loginForm, #signupForm, #transferForm, #profileSettingsForm, #loanAppForm, form');
+        const forms = document.querySelectorAll(
+            'form[data-validate], #loginForm, #signupForm, #transferForm, #transferFormModal, #profileSettingsForm, #adminSettingsForm, #loanAppForm, form'
+        );
 
         forms.forEach(form => {
+            // Remove any legacy inline onsubmit that bypassed validation
+            if (form.id === 'transferFormModal' && form.getAttribute('onsubmit')) {
+                form.removeAttribute('onsubmit');
+            }
+            if (form.id === 'adminSettingsForm' && form.getAttribute('onsubmit')) {
+                form.removeAttribute('onsubmit');
+            }
+
             const inputs = form.querySelectorAll('input, select, textarea');
 
             inputs.forEach(input => {
@@ -242,6 +271,10 @@
                     }
                 });
             });
+
+            // Prevent duplicate listeners
+            if (form.dataset.boundValidation) return;
+            form.dataset.boundValidation = 'true';
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -269,7 +302,7 @@
 
     // Single Input Validation Logic
     function validateSingleInput(input) {
-        const val = input.value.trim();
+        const val = input.value ? input.value.trim() : '';
         const type = input.type;
         const isRequired = input.hasAttribute('required');
 
@@ -284,7 +317,7 @@
         }
 
         // Email Validation
-        if (type === 'email' || input.name === 'email') {
+        if (type === 'email' || input.name === 'email' || input.id === 'loginEmail' || input.id === 'signupEmail' || input.id === 'profileEmail' || input.id === 'adminEmail') {
             if (!Patterns.email.test(val)) {
                 showFieldError(input, 'Please enter a valid email address (e.g. name@domain.com)');
                 return false;
@@ -292,13 +325,13 @@
         }
 
         // Name Validation
-        if (input.name === 'fullname' || input.id === 'fullname' || input.id === 'signupName') {
-            if (val.length < 3) {
-                showFieldError(input, 'Full name must be at least 3 characters');
+        if (input.name === 'fullname' || input.id === 'fullname' || input.id === 'signupName' || input.id === 'profileName' || input.id === 'recipientName' || input.id === 'quickRecipientName' || input.id === 'adminName') {
+            if (val.length < 2) {
+                showFieldError(input, 'Name must be at least 2 characters');
                 return false;
             }
             if (!Patterns.name.test(val)) {
-                showFieldError(input, 'Please enter a valid full name (letters only)');
+                showFieldError(input, 'Please enter a valid name (letters & spaces only)');
                 return false;
             }
         }
@@ -334,8 +367,8 @@
             }
         }
 
-        // Money Transfer Amount Validation
-        if (input.id === 'transferAmount') {
+        // Money Transfer Amount Validation (both Wire and Quick Transfer Modal)
+        if (input.id === 'transferAmount' || input.id === 'quickTransferAmount' || input.name === 'transferAmount') {
             const amount = parseFloat(val);
             if (isNaN(amount) || amount <= 0) {
                 showFieldError(input, 'Please enter a valid transfer amount greater than $0.00');
@@ -363,6 +396,14 @@
             }
         }
 
+        // Routing Number Validation
+        if (input.id === 'routingNumber') {
+            if (!Patterns.routingNumber.test(val)) {
+                showFieldError(input, 'Routing number must be exactly 9 digits');
+                return false;
+            }
+        }
+
         markFieldValid(input);
         return true;
     }
@@ -379,30 +420,190 @@
         text.textContent = `Strength: ${res.text}`;
     }
 
+    // Retrieve or initialize users directory
+    function getUsersDatabase() {
+        let db = {};
+        try {
+            db = JSON.parse(localStorage.getItem('stackly_users_db') || '{}');
+        } catch (e) {
+            db = {};
+        }
+
+        // Seed default demo accounts if missing
+        if (!db['alex.morgan@testackly.com']) {
+            db['alex.morgan@testackly.com'] = {
+                name: 'Alex Morgan',
+                email: 'alex.morgan@testackly.com',
+                role: 'user',
+                tier: 'Personal Premier',
+                accountNumber: '4592 8821 3491 4902',
+                shortAccount: '****4902',
+                balance: 128450.00,
+                joinedDate: 'Jan 15, 2024'
+            };
+        }
+        if (!db['admin@testackly.com']) {
+            db['admin@testackly.com'] = {
+                name: 'Super Admin',
+                email: 'admin@testackly.com',
+                role: 'admin',
+                roleTitle: 'Chief Compliance Officer & System Administrator',
+                node: 'Compliance Node #1',
+                joinedDate: 'Oct 01, 2023'
+            };
+        }
+        return db;
+    }
+
+    function saveUserToDatabase(user) {
+        if (!user || !user.email) return;
+        const db = getUsersDatabase();
+        db[user.email.toLowerCase()] = Object.assign({}, db[user.email.toLowerCase()] || {}, user);
+        localStorage.setItem('stackly_users_db', JSON.stringify(db));
+    }
+
+    // Synchronize user credentials across all UI elements on both dashboards
+    function syncUserDataAcrossUI() {
+        try {
+            const isUserDash = window.location.pathname.includes('user-dashboard.html');
+            const isAdminDash = window.location.pathname.includes('admin-dashboard.html');
+
+            let currentUser = JSON.parse(localStorage.getItem('stackly_user') || 'null');
+
+            // Provide sensible defaults if storage is empty
+            if (!currentUser) {
+                if (isAdminDash) {
+                    currentUser = {
+                        name: 'Super Admin',
+                        email: 'admin@testackly.com',
+                        role: 'admin',
+                        roleTitle: 'Chief Compliance Officer & System Administrator',
+                        node: 'Compliance Node #1'
+                    };
+                } else {
+                    currentUser = {
+                        name: 'Alex Morgan',
+                        email: 'alex.morgan@testackly.com',
+                        role: 'user',
+                        tier: 'Personal Premier',
+                        accountNumber: '4592 8821 3491 4902',
+                        shortAccount: '****4902',
+                        balance: 128450.00
+                    };
+                }
+                localStorage.setItem('stackly_user', JSON.stringify(currentUser));
+            }
+
+            // 1. Sync User Dashboard elements
+            if (currentUser.name) {
+                document.querySelectorAll('.user-display-name').forEach(el => {
+                    el.textContent = currentUser.name;
+                });
+            }
+            if (currentUser.email) {
+                document.querySelectorAll('.user-display-email').forEach(el => {
+                    el.textContent = currentUser.email;
+                });
+            }
+            if (currentUser.tier) {
+                document.querySelectorAll('.user-display-tier').forEach(el => {
+                    el.textContent = currentUser.tier;
+                });
+            }
+            if (currentUser.shortAccount) {
+                document.querySelectorAll('.user-display-account').forEach(el => {
+                    el.textContent = `Account #${currentUser.shortAccount}`;
+                });
+            }
+
+            // Sync User Profile Settings Inputs (.value property)
+            const profileNameInput = document.getElementById('profileName');
+            if (profileNameInput && currentUser.name) {
+                profileNameInput.value = currentUser.name;
+            }
+            const profileEmailInput = document.getElementById('profileEmail');
+            if (profileEmailInput && currentUser.email) {
+                profileEmailInput.value = currentUser.email;
+            }
+
+            // 2. Sync Admin Dashboard elements
+            if (currentUser.name) {
+                document.querySelectorAll('.admin-display-name').forEach(el => {
+                    el.textContent = currentUser.name;
+                });
+            }
+            if (currentUser.email) {
+                document.querySelectorAll('.admin-display-email').forEach(el => {
+                    el.textContent = currentUser.email;
+                });
+            }
+            if (currentUser.roleTitle || currentUser.role) {
+                document.querySelectorAll('.admin-display-role').forEach(el => {
+                    el.textContent = currentUser.roleTitle || 'Compliance & Liquidity';
+                });
+            }
+
+            // Sync Admin Settings Inputs
+            const adminEmailInput = document.getElementById('adminEmail');
+            if (adminEmailInput && currentUser.email) {
+                adminEmailInput.value = currentUser.email;
+            }
+            const adminNameInput = document.getElementById('adminName');
+            if (adminNameInput && currentUser.name) {
+                adminNameInput.value = currentUser.name;
+            }
+
+        } catch (e) {
+            console.warn('User credentials UI sync skipped', e);
+        }
+    }
+
     // Success Submissions Handler
     function handleFormSuccess(form) {
         const formId = form.id;
 
         // 1. LOGIN FORM
         if (formId === 'loginForm') {
-            const email = form.querySelector('input[type="email"], #loginEmail').value.trim();
-            const role = form.querySelector('#loginRole') ? form.querySelector('#loginRole').value : 'user';
+            const emailInput = form.querySelector('input[type="email"], #loginEmail');
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+            const roleSelect = form.querySelector('#loginRole');
+            const selectedRole = roleSelect ? roleSelect.value : 'user';
 
             showToast('Authenticating with te stackly Security Shield...', 'info');
-            
-            localStorage.setItem('stackly_user', JSON.stringify({
-                email: email,
-                name: email.split('@')[0].toUpperCase(),
-                role: email.includes('admin') || role === 'admin' ? 'admin' : 'user',
-                lastLogin: new Date().toLocaleTimeString()
-            }));
+
+            const db = getUsersDatabase();
+            let matchedUser = db[email];
+
+            const isAdmin = email.includes('admin') || selectedRole === 'admin';
+            const determinedRole = isAdmin ? 'admin' : 'user';
+
+            if (!matchedUser) {
+                // Generate a formatted profile for new email logins
+                const formattedName = formatNameFromEmail(email);
+                matchedUser = {
+                    name: formattedName,
+                    email: email,
+                    role: determinedRole,
+                    tier: determinedRole === 'admin' ? 'Institutional Administrator' : 'Personal Premier',
+                    roleTitle: determinedRole === 'admin' ? 'Compliance & Security Director' : undefined,
+                    shortAccount: '****' + Math.floor(1000 + Math.random() * 9000),
+                    balance: 128450.00,
+                    lastLogin: new Date().toLocaleTimeString()
+                };
+                saveUserToDatabase(matchedUser);
+            } else {
+                matchedUser.lastLogin = new Date().toLocaleTimeString();
+                if (isAdmin) matchedUser.role = 'admin';
+            }
+
+            localStorage.setItem('stackly_user', JSON.stringify(matchedUser));
 
             setTimeout(() => {
-                if (email.includes('admin') || role === 'admin') {
-                    showToast('Admin access authorized. Redirecting...', 'success');
+                if (determinedRole === 'admin') {
+                    showToast(`Welcome back, ${matchedUser.name}! Opening Admin Console...`, 'success');
                     window.location.href = 'admin-dashboard.html';
                 } else {
-                    showToast('Welcome back! Redirecting to your portal...', 'success');
+                    showToast(`Welcome back, ${matchedUser.name}! Opening your Client Portal...`, 'success');
                     window.location.href = 'user-dashboard.html';
                 }
             }, 800);
@@ -412,17 +613,22 @@
         // 2. SIGNUP FORM
         if (formId === 'signupForm') {
             const name = form.querySelector('#signupName') ? form.querySelector('#signupName').value.trim() : 'Valued Client';
-            const email = form.querySelector('#signupEmail').value.trim();
+            const email = form.querySelector('#signupEmail') ? form.querySelector('#signupEmail').value.trim().toLowerCase() : '';
             const accountType = form.querySelector('#accountTier') ? form.querySelector('#accountTier').value : 'Personal Wealth';
+            const shortAcc = '****' + Math.floor(1000 + Math.random() * 9000);
 
-            localStorage.setItem('stackly_user', JSON.stringify({
+            const newUser = {
                 name: name,
                 email: email,
                 tier: accountType,
                 role: 'user',
+                shortAccount: shortAcc,
                 balance: 25000.00,
                 joinedDate: new Date().toLocaleDateString()
-            }));
+            };
+
+            saveUserToDatabase(newUser);
+            localStorage.setItem('stackly_user', JSON.stringify(newUser));
 
             const modal = document.getElementById('signupSuccessModal');
             if (modal) {
@@ -437,41 +643,147 @@
             return;
         }
 
-        // 3. TRANSFER FORM (User Dashboard)
-        if (formId === 'transferForm') {
-            const amount = parseFloat(form.querySelector('#transferAmount').value);
-            const recipient = form.querySelector('#recipientName') ? form.querySelector('#recipientName').value : 'Recipient';
-            
-            showToast(`Transfer of $${amount.toLocaleString(undefined, {minimumFractionDigits: 2})} to ${recipient} completed securely!`, 'success');
-            
-            const transferModal = document.getElementById('transferModal');
-            if (transferModal) {
-                transferModal.classList.add('hidden');
+        // 3. QUICK TRANSFER MODAL FORM (Fix: Strictly validates input fields, blocks blank submit, updates ledger)
+        if (formId === 'transferFormModal') {
+            const recipientInput = form.querySelector('#quickRecipientName') || form.querySelector('input[type="text"]');
+            const amountInput = form.querySelector('#quickTransferAmount') || form.querySelector('input[type="number"]');
+            const noteInput = form.querySelector('#quickTransferNote') || form.querySelectorAll('input[type="text"]')[1];
+
+            const recipient = recipientInput ? recipientInput.value.trim() : '';
+            const amount = amountInput ? parseFloat(amountInput.value) : 0;
+            const note = noteInput ? noteInput.value.trim() : 'Instant Transfer';
+
+            // Rigorous sanity validation
+            if (!recipient || recipient.length < 2) {
+                if (recipientInput) showFieldError(recipientInput, 'Please provide the recipient’s full name');
+                showToast('Recipient name is required to execute a transfer.', 'error');
+                return;
             }
+
+            if (isNaN(amount) || amount <= 0) {
+                if (amountInput) showFieldError(amountInput, 'Please enter a valid amount greater than $0.00');
+                showToast('Please specify a transfer amount greater than $0.00.', 'error');
+                return;
+            }
+
+            if (amount > 50000) {
+                if (amountInput) showFieldError(amountInput, 'Maximum single instant transfer is $50,000.00');
+                showToast('Transfer amount exceeds daily limit ($50,000.00).', 'error');
+                return;
+            }
+
+            // Success: Display descriptive confirmation toast
+            showToast(`Transfer of $${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} to ${recipient} completed successfully!`, 'success');
+
+            // Dynamically prepend new transaction to recent transactions table if available
+            addTransactionToRecentList(recipient, amount, note);
+
+            // Close transfer modal if function exists
+            if (typeof window.closeTransferModal === 'function') {
+                window.closeTransferModal();
+            } else {
+                const modal = document.getElementById('transferModal');
+                if (modal) modal.classList.add('hidden');
+            }
+
+            // Clean form state
             form.reset();
-            form.querySelectorAll('.input-valid').forEach(el => el.classList.remove('input-valid'));
+            form.querySelectorAll('.input-valid, .input-invalid').forEach(el => {
+                el.classList.remove('input-valid', 'input-invalid');
+            });
+            form.querySelectorAll('.field-error-msg').forEach(el => el.remove());
             return;
         }
 
-        // 4. PROFILE SETTINGS FORM
+        // 4. WIRE & DOMESTIC TRANSFER FORM (Tab 2 on User Dashboard)
+        if (formId === 'transferForm') {
+            const amountInput = form.querySelector('#transferAmount');
+            const amount = amountInput ? parseFloat(amountInput.value) : 0;
+            const recipient = form.querySelector('#recipientName') ? form.querySelector('#recipientName').value.trim() : 'Recipient';
+            
+            showToast(`Wire transfer of $${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })} to ${recipient} cleared successfully!`, 'success');
+            
+            addTransactionToRecentList(recipient, amount, 'Wire Clearance');
+
+            form.reset();
+            form.querySelectorAll('.input-valid, .input-invalid').forEach(el => {
+                el.classList.remove('input-valid', 'input-invalid');
+            });
+            form.querySelectorAll('.field-error-msg').forEach(el => el.remove());
+            return;
+        }
+
+        // 5. PROFILE SETTINGS FORM (User Dashboard)
         if (formId === 'profileSettingsForm') {
-            const newName = form.querySelector('#profileName') ? form.querySelector('#profileName').value : null;
-            const newEmail = form.querySelector('#profileEmail') ? form.querySelector('#profileEmail').value : null;
+            const newName = form.querySelector('#profileName') ? form.querySelector('#profileName').value.trim() : null;
+            const newEmail = form.querySelector('#profileEmail') ? form.querySelector('#profileEmail').value.trim().toLowerCase() : null;
             
             let currentUser = JSON.parse(localStorage.getItem('stackly_user') || '{}');
             if (newName) currentUser.name = newName;
             if (newEmail) currentUser.email = newEmail;
-            localStorage.setItem('stackly_user', JSON.stringify(currentUser));
-
-            document.querySelectorAll('.user-display-name').forEach(el => el.textContent = newName || 'User');
             
+            localStorage.setItem('stackly_user', JSON.stringify(currentUser));
+            saveUserToDatabase(currentUser);
+
+            syncUserDataAcrossUI();
             showToast('Banking profile & contact preferences updated successfully!', 'success');
             return;
         }
 
+        // 6. ADMIN CONSOLE SETTINGS FORM (Admin Dashboard)
+        if (formId === 'adminSettingsForm') {
+            const newEmail = form.querySelector('#adminEmail') ? form.querySelector('#adminEmail').value.trim().toLowerCase() : null;
+            const newName = form.querySelector('#adminName') ? form.querySelector('#adminName').value.trim() : null;
+
+            let currentUser = JSON.parse(localStorage.getItem('stackly_user') || '{}');
+            if (newEmail) currentUser.email = newEmail;
+            if (newName) currentUser.name = newName;
+            currentUser.role = 'admin';
+
+            localStorage.setItem('stackly_user', JSON.stringify(currentUser));
+            saveUserToDatabase(currentUser);
+
+            syncUserDataAcrossUI();
+            showToast('Console security policy & compliance administrator updated successfully.', 'success');
+            return;
+        }
+
         // Default Generic Form
-        showToast('Request submitted successfully. Our financial advisors will contact you shortly.', 'success');
+        showToast('Request submitted successfully. Our financial team will review it shortly.', 'success');
         form.reset();
+        form.querySelectorAll('.input-valid, .input-invalid').forEach(el => {
+            el.classList.remove('input-valid', 'input-invalid');
+        });
+    }
+
+    // Helper: Add completed transfer to UI recent transactions list
+    function addTransactionToRecentList(recipient, amount, note) {
+        const txContainer = document.querySelector('#tab-overview .space-y-3');
+        if (!txContainer) return;
+
+        const newRow = document.createElement('div');
+        newRow.className = 'tx-item outflow flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-surface hover:bg-gray-100 transition gap-3 border border-brand/40 animate-pulse';
+        newRow.innerHTML = `
+            <div class="flex items-center gap-3.5 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-dark text-brand flex items-center justify-center font-bold flex-shrink-0">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </div>
+                <div class="min-w-0">
+                    <div class="text-sm font-bold text-dark truncate">Transfer to ${recipient}</div>
+                    <div class="text-xs text-gray-400 truncate">${note || 'Instant Money Transfer'} &bull; Just Now</div>
+                </div>
+            </div>
+            <div class="text-right flex-shrink-0">
+                <div class="text-sm font-bold text-dark">-$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <span class="text-[10px] bg-brand/30 text-dark px-2 py-0.5 rounded-full font-bold uppercase">Completed</span>
+            </div>
+        `;
+        txContainer.insertBefore(newRow, txContainer.firstChild);
+
+        // Remove highlight pulse after 3 seconds
+        setTimeout(() => {
+            newRow.classList.remove('border-brand/40', 'animate-pulse');
+        }, 3000);
     }
 
     // Quick 1-Click Demo Login Fillers
@@ -519,23 +831,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         injectStyles();
         setupFormValidation();
-
-        try {
-            const savedUser = JSON.parse(localStorage.getItem('stackly_user') || '{}');
-            if (savedUser.name) {
-                document.querySelectorAll('.user-display-name').forEach(el => el.textContent = savedUser.name);
-            }
-            if (savedUser.email) {
-                document.querySelectorAll('.user-display-email').forEach(el => el.textContent = savedUser.email);
-            }
-        } catch (e) {
-            console.warn('Storage sync skipped', e);
-        }
+        syncUserDataAcrossUI();
     });
 
-    // Expose website popups / toast notifications globally & replace native browser alerts
+    // Expose helpers globally
     window.showToast = showToast;
     window.stacklyToast = showToast;
+    window.syncUserDataAcrossUI = syncUserDataAcrossUI;
     window.alert = function (message) {
         showToast(message, 'info');
     };

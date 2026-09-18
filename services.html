@@ -183,27 +183,27 @@
             
             <!-- Hero Visual -->
             <div class="relative flex justify-center lg:justify-end">
-                <div class="relative w-full max-w-md h-[460px] rounded-[3rem] overflow-hidden shadow-2xl border border-gray-800 group">
+                <div class="relative w-full max-w-md h-[430px] sm:h-[460px] rounded-[2.5rem] sm:rounded-[3rem] overflow-hidden shadow-2xl border border-gray-800 group">
                     <img src="images/pexels-shkrabaanthony-5466244.webp" alt="Modern Banking Experience" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/30 to-transparent"></div>
                     
                     <!-- Floating Dashboard Card Mockup -->
-                    <div class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md text-dark p-6 rounded-3xl shadow-2xl border border-white">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-brand rounded-full flex items-center justify-center font-bold text-dark shadow-sm">
-                                    <i class="fa-solid fa-vault"></i>
+                    <div class="absolute bottom-4 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md text-dark p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-2xl border border-white">
+                        <div class="flex items-center justify-between gap-2 mb-3 sm:mb-4">
+                            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-brand rounded-full flex items-center justify-center font-bold text-dark shadow-sm shrink-0">
+                                    <i class="fa-solid fa-vault text-xs sm:text-base"></i>
                                 </div>
-                                <div>
-                                    <p class="text-xs text-gray-500 font-medium">Smart Checking</p>
-                                    <h4 class="text-xl font-bold text-dark">$48,920.50</h4>
+                                <div class="min-w-0">
+                                    <p class="text-[10px] sm:text-xs text-gray-500 font-medium truncate">Smart Checking</p>
+                                    <h4 class="text-base sm:text-xl font-bold text-dark truncate">$48,920.50</h4>
                                 </div>
                             </div>
-                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">+4.8% APY</span>
+                            <span class="bg-green-100 text-green-700 text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shrink-0 whitespace-nowrap">+4.8% APY</span>
                         </div>
-                        <div class="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
-                            <span><i class="fa-solid fa-shield-halved text-green-600 mr-1"></i> FDIC Insured</span>
-                            <span><i class="fa-solid fa-bolt text-brand mr-1"></i> Instant Transfer</span>
+                        <div class="flex items-center justify-between text-[10px] sm:text-xs text-gray-500 pt-2.5 sm:pt-3 border-t border-gray-100 gap-1">
+                            <span class="whitespace-nowrap"><i class="fa-solid fa-shield-halved text-green-600 mr-1"></i> FDIC Insured</span>
+                            <span class="whitespace-nowrap"><i class="fa-solid fa-bolt text-brand mr-1"></i> Instant Transfer</span>
                         </div>
                     </div>
                 </div>
@@ -218,97 +218,97 @@
             <p class="text-gray-600 max-w-2xl mx-auto text-lg">We offer comprehensive financial products built to meet your personal milestones and commercial growth.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[320px]">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:auto-rows-[320px]">
             
             <!-- Large Card: Personal Banking -->
-            <div class="reveal md:col-span-2 md:row-span-2 bg-surface rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group service-card-hover border border-gray-200 hover:border-brand transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
-                <div class="absolute top-0 right-0 w-80 h-80 bg-brand/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 transition duration-500 group-hover:bg-brand/40 group-hover:scale-150"></div>
+            <div class="reveal md:col-span-2 md:row-span-2 bg-surface rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 md:p-12 relative overflow-hidden group service-card-hover border border-gray-200 hover:border-brand transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between min-h-[380px] md:min-h-0">
+                <div class="absolute top-0 right-0 w-80 h-80 bg-brand/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 transition duration-500 group-hover:bg-brand/40 group-hover:scale-150 pointer-events-none"></div>
                 
-                <div class="relative z-10 flex flex-col h-full justify-between">
+                <div class="relative z-10 flex flex-col justify-between flex-1">
                     <div>
-                        <div class="service-icon w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl text-dark mb-8 shadow-sm transition duration-300">
+                        <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center text-2xl sm:text-3xl text-dark mb-6 sm:mb-8 shadow-sm transition duration-300">
                             <i class="fa-solid fa-wallet text-brand"></i>
                         </div>
-                        <h3 class="text-3xl md:text-4xl font-bold text-dark mb-4">Personal Banking & Accounts</h3>
-                        <p class="text-gray-600 text-lg max-w-md transition-all duration-300 group-hover:text-dark">Manage your daily finances with effortless convenience. Enjoy high-yield savings, intuitive checking accounts, zero hidden ATM fees, and instant contactless payments.</p>
+                        <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold text-dark mb-3 sm:mb-4">Personal Banking & Accounts</h3>
+                        <p class="text-gray-600 text-sm sm:text-base md:text-lg max-w-md lg:max-w-lg transition-all duration-300 group-hover:text-dark leading-relaxed">Manage your daily finances with effortless convenience. Enjoy high-yield savings, intuitive checking accounts, zero hidden ATM fees, and instant contactless payments.</p>
                     </div>
                     
-                    <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition mt-8 group-hover:translate-x-4 w-max text-lg">
+                    <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition mt-6 sm:mt-8 group-hover:translate-x-4 w-max text-base sm:text-lg">
                         Open an Account <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
                 <!-- Card Photo Mockup -->
-                <div class="absolute bottom-[-5%] right-[-5%] w-72 md:w-96 rounded-2xl overflow-hidden shadow-2xl hidden sm:block transform rotate-[-8deg] group-hover:rotate-0 group-hover:scale-105 transition-all duration-700 border-4 border-white">
+                <div class="absolute bottom-[-5%] right-[-5%] w-72 md:w-96 rounded-2xl overflow-hidden shadow-2xl hidden lg:block transform rotate-[-8deg] group-hover:rotate-0 group-hover:scale-105 transition-all duration-700 border-4 border-white pointer-events-none">
                     <img src="images/pexels-cottonbro-5077047.webp" alt="Mobile Banking Dashboard" class="w-full h-auto object-cover">
                 </div>
             </div>
 
             <!-- Standard Card: Business Banking -->
-            <div class="reveal bg-dark rounded-[2.5rem] p-8 relative overflow-hidden group service-card-hover text-white flex flex-col justify-between hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-800 hover:border-gray-700">
+            <div class="reveal bg-dark rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 relative overflow-hidden group service-card-hover text-white flex flex-col justify-between hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-800 hover:border-gray-700 min-h-[260px] md:min-h-0">
                 <div class="relative z-10">
-                    <div class="service-icon w-14 h-14 bg-gray-800 rounded-2xl flex items-center justify-center text-2xl text-brand mb-6 border border-gray-700 transition duration-300">
+                    <div class="service-icon w-12 h-12 sm:w-14 sm:h-14 bg-gray-800 rounded-2xl flex items-center justify-center text-xl sm:text-2xl text-brand mb-5 sm:mb-6 border border-gray-700 transition duration-300">
                         <i class="fa-solid fa-briefcase"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3">Commercial & Small Business</h3>
-                    <p class="text-gray-400">Scalable business checking, payroll integration, low-fee merchant card processing, and working capital lines.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-3">Commercial & Small Business</h3>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">Scalable business checking, payroll integration, low-fee merchant card processing, and working capital lines.</p>
                 </div>
-                <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-brand hover:text-white transition mt-4 group-hover:translate-x-2 w-max">
+                <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-brand hover:text-white transition mt-4 group-hover:translate-x-2 w-max text-sm sm:text-base">
                     Learn More <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
 
             <!-- Standard Card: Investment -->
-            <div class="reveal bg-brand rounded-[2.5rem] p-8 relative overflow-hidden group service-card-hover text-dark flex flex-col justify-between border border-brand-dark hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+            <div class="reveal bg-brand rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 relative overflow-hidden group service-card-hover text-dark flex flex-col justify-between border border-brand-dark hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 min-h-[260px] md:min-h-0">
                 <div class="relative z-10">
-                    <div class="service-icon w-14 h-14 bg-white/70 rounded-2xl flex items-center justify-center text-2xl text-dark mb-6 backdrop-blur-sm transition duration-300 shadow-sm">
+                    <div class="service-icon w-12 h-12 sm:w-14 sm:h-14 bg-white/70 rounded-2xl flex items-center justify-center text-xl sm:text-2xl text-dark mb-5 sm:mb-6 backdrop-blur-sm transition duration-300 shadow-sm">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-3">Wealth & Asset Management</h3>
-                    <p class="text-dark/90 font-medium">Expert fiduciary advisory, automated index portfolios, and retirement planning to compound your wealth safely.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-3">Wealth & Asset Management</h3>
+                    <p class="text-dark/90 font-medium text-sm sm:text-base leading-relaxed">Expert fiduciary advisory, automated index portfolios, and retirement planning to compound your wealth safely.</p>
                 </div>
-                <a href="contact.html" class="inline-flex items-center gap-2 font-bold bg-dark text-white hover:bg-white hover:text-dark px-6 py-2.5 rounded-full transition mt-4 w-max shadow-sm">
+                <a href="contact.html" class="inline-flex items-center gap-2 font-bold bg-dark text-white hover:bg-white hover:text-dark px-5 sm:px-6 py-2 sm:py-2.5 rounded-full transition mt-4 w-max shadow-sm text-sm sm:text-base">
                     Start Investing
                 </a>
             </div>
 
             <!-- Standard Card: Loans -->
-            <div class="reveal bg-surface border border-gray-200 rounded-[2.5rem] p-8 relative overflow-hidden group service-card-hover flex flex-col justify-between hover:border-brand transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+            <div class="reveal bg-surface border border-gray-200 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 relative overflow-hidden group service-card-hover flex flex-col justify-between hover:border-brand transition-all duration-500 hover:-translate-y-2 hover:shadow-xl min-h-[260px] md:min-h-0">
                 <div class="relative z-10">
-                    <div class="service-icon w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-dark mb-6 shadow-sm transition duration-300">
+                    <div class="service-icon w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-2xl flex items-center justify-center text-xl sm:text-2xl text-dark mb-5 sm:mb-6 shadow-sm transition duration-300">
                         <i class="fa-solid fa-house-chimney text-brand"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-dark mb-3">Home Mortgages & Loans</h3>
-                    <p class="text-gray-600">Competitive fixed rates for Salem home buyers, auto financing, and simple personal refinancing.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-dark mb-3">Home Mortgages & Loans</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">Competitive fixed rates for Salem home buyers, auto financing, and simple personal refinancing.</p>
                 </div>
-                <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition mt-4 group-hover:translate-x-2 w-max">
+                <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition mt-4 group-hover:translate-x-2 w-max text-sm sm:text-base">
                     Calculate Rate <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
             
             <!-- Standard Card: Insurance -->
-            <div class="reveal bg-surface border border-gray-200 rounded-[2.5rem] p-8 relative overflow-hidden group service-card-hover flex flex-col justify-between hover:border-brand transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+            <div class="reveal bg-surface border border-gray-200 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 relative overflow-hidden group service-card-hover flex flex-col justify-between hover:border-brand transition-all duration-500 hover:-translate-y-2 hover:shadow-xl min-h-[260px] md:min-h-0">
                 <div class="relative z-10">
-                    <div class="service-icon w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-dark mb-6 shadow-sm transition duration-300">
+                    <div class="service-icon w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-2xl flex items-center justify-center text-xl sm:text-2xl text-dark mb-5 sm:mb-6 shadow-sm transition duration-300">
                         <i class="fa-solid fa-shield-heart text-brand"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-dark mb-3">Life & Health Protection</h3>
-                    <p class="text-gray-600">Comprehensive coverage options tailored to secure your family's future and safeguard medical emergencies.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-dark mb-3">Life & Health Protection</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">Comprehensive coverage options tailored to secure your family's future and safeguard medical emergencies.</p>
                 </div>
-                <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition mt-4 group-hover:translate-x-2 w-max">
+                <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition mt-4 group-hover:translate-x-2 w-max text-sm sm:text-base">
                     Get a Quote <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
             
             <!-- Standard Card: Global Transfer -->
-            <div class="reveal bg-surface border border-gray-200 rounded-[2.5rem] p-8 relative overflow-hidden group service-card-hover flex flex-col justify-between hover:border-brand transition-all duration-500 hover:-translate-y-2 hover:shadow-xl">
+            <div class="reveal bg-surface border border-gray-200 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 relative overflow-hidden group service-card-hover flex flex-col justify-between hover:border-brand transition-all duration-500 hover:-translate-y-2 hover:shadow-xl min-h-[260px] md:min-h-0">
                 <div class="relative z-10">
-                    <div class="service-icon w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-dark mb-6 shadow-sm transition duration-300">
+                    <div class="service-icon w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-2xl flex items-center justify-center text-xl sm:text-2xl text-dark mb-5 sm:mb-6 shadow-sm transition duration-300">
                         <i class="fa-solid fa-earth-americas text-brand"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-dark mb-3">Global Wire & FX Transfers</h3>
-                    <p class="text-gray-600">Send money internationally across 140+ countries with transparent exchange rates and zero surprise fees.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-dark mb-3">Global Wire & FX Transfers</h3>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">Send money internationally across 140+ countries with transparent exchange rates and zero surprise fees.</p>
                 </div>
-                <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition mt-4 group-hover:translate-x-2 w-max">
+                <a href="contact.html" class="inline-flex items-center gap-2 font-bold text-dark hover:text-brand transition mt-4 group-hover:translate-x-2 w-max text-sm sm:text-base">
                     Send Money <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -490,7 +490,6 @@
                 <div>
                     <h4 class="font-bold text-dark text-lg mb-6">Quick Links</h4>
                     <ul class="space-y-4 text-gray-500">
-                        <li><a href="404.html" class="hover:text-brand transition">404 Not Found</a></li>
                         <li><a href="user-dashboard.html" class="hover:text-brand transition">Client Portal</a></li>
                         <li><a href="admin-dashboard.html" class="hover:text-brand transition">Admin Console</a></li>
                         <li><a href="login.html" class="hover:text-brand transition">Secure Login</a></li>
@@ -508,7 +507,7 @@
             </div>
 
             <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4">
-                <p>&copy; Copyright - te stackly | Designed for Salem</p>
+                <p>&copy; Copyright - Stackly | Designed for Salem</p>
                 <p class="text-xs text-gray-400">FDIC Insured &bull; 256-bit Bank-Grade Encryption</p>
             </div>
         </div>
