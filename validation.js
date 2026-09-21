@@ -1,5 +1,5 @@
-/**
- * te stackly - Banking and Financial Services
+﻿/**
+ * the stackly - Banking and Financial Services
  * Global Form Validation & State Management Engine
  * Features:
  * 1. Real-time constraint validation (Live feedback on input & blur)
@@ -569,7 +569,7 @@
             const roleSelect = form.querySelector('#loginRole');
             const selectedRole = roleSelect ? roleSelect.value : 'user';
 
-            showToast('Authenticating with te stackly Security Shield...', 'info');
+            showToast('Authenticating with the stackly Security Shield...', 'info');
 
             const db = getUsersDatabase();
             let matchedUser = db[email];
